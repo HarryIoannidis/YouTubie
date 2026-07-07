@@ -15,6 +15,11 @@ import com.bumptech.glide.Glide
 import com.youtubie.app.databinding.HomeFragmentBinding
 import com.youtubie.app.ui.viewmodel.HomeUiState
 import com.youtubie.app.ui.viewmodel.HomeViewModel
+import com.youtubie.app.data.repository.YoutubeRepository
+import com.youtubie.app.data.model.VideoInfoResponse
+import com.youtubie.app.data.download.DownloadWorker
+import android.os.Build
+import javax.inject.Inject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -22,6 +27,10 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
+    
+    @Inject
+    lateinit var repository: YoutubeRepository
+
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -41,6 +50,25 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUI() {
+        binding.progressbarAudio.visibility = View.GONE
+        binding.progressbarVideo.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.progressbarRefresh.visibility = View.GONE
+
+        // Apply card and pill styles programmatically to match design
+        _RoundAndBorder(binding.linearForSearchMain, "#FFFFFF", 2.0, "#EEEEEE", 25.0)
+        _RoundAndBorder(binding.linearSearchResult, "#FFFFFF", 2.0, "#EEEEEE", 25.0)
+        _RoundAndBorder(binding.linearEditText, "#FFFFFF", 2.0, "#CCCCCC", 90.0)
+        _rippleRoundStroke(binding.linearSearch, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+        _rippleRoundStroke(binding.linearRefresh, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+        _rippleRoundStroke(binding.linearSearchAgain, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+
+        // Style the tips and instructions links to be blue and underlined
+        binding.textviewTips.setTextColor(android.graphics.Color.parseColor("#2196F3"))
+        binding.textviewTips.paintFlags = binding.textviewTips.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
+        binding.textviewInstructions.setTextColor(android.graphics.Color.parseColor("#2196F3"))
+        binding.textviewInstructions.paintFlags = binding.textviewInstructions.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
+
         binding.linearSearch.isClickable = true
         binding.linearSearch.setOnClickListener {
             val url = binding.searchEditText.text.toString()
@@ -68,6 +96,279 @@ class HomeFragment : Fragment() {
                 viewModel.fetchVideoMetadata(url)
             }
         }
+
+        binding.textviewTips.setOnClickListener {
+            showTipsDialog()
+        }
+
+        binding.textviewInstructions.setOnClickListener {
+            showInstructionsDialog()
+        }
+
+        binding.linearAudio.setOnClickListener {
+            val state = viewModel.uiState.value
+            if (state is HomeUiState.Success) {
+                val metadata = state.metadata
+                val audioUrl = audioFormatUrl(metadata)
+                if (audioUrl != null) {
+                    checkStoragePermissionAndStart(metadata, audioUrl, "Audio")
+                } else {
+                    fetchAndStartDownload(metadata.id ?: "", "Audio")
+                }
+            }
+        }
+
+        binding.linearVideo.setOnClickListener {
+            val state = viewModel.uiState.value
+            if (state is HomeUiState.Success) {
+                val metadata = state.metadata
+                val videoUrl = videoFormatUrl(metadata)
+                if (videoUrl != null) {
+                    checkStoragePermissionAndStart(metadata, videoUrl, "Video")
+                } else {
+                    fetchAndStartDownload(metadata.id ?: "", "Video")
+                }
+            }
+        }
+
+        binding.thumbnail.setOnLongClickListener {
+            val state = viewModel.uiState.value
+            if (state is HomeUiState.Success) {
+                val metadata = state.metadata
+                val thumbnailUrl = metadata.thumbnails?.lastOrNull()?.url
+                if (thumbnailUrl != null) {
+                    checkStoragePermissionAndStart(metadata, thumbnailUrl, "Image")
+                }
+            }
+            true
+        }
+    }
+
+    private fun audioFormatUrl(metadata: VideoInfoResponse): String? {
+        val adaptiveAudio = metadata.adaptiveFormats?.filter {
+            it.mimeType?.contains("audio") == true
+        }?.maxByOrNull {
+            when (it.audioQuality) {
+                "AUDIO_QUALITY_HIGH" -> 3
+                "AUDIO_QUALITY_MEDIUM" -> 2
+                "AUDIO_QUALITY_LOW" -> 1
+                else -> 0
+            }
+        }
+        if (adaptiveAudio?.url != null) return adaptiveAudio.url
+        return metadata.formats?.firstOrNull()?.url
+    }
+
+    private fun videoFormatUrl(metadata: VideoInfoResponse): String? {
+        val progressiveVideo = metadata.formats?.maxByOrNull {
+            when (it.qualityLabel) {
+                "1080p" -> 1080
+                "720p" -> 720
+                "480p" -> 480
+                "360p" -> 360
+                "240p" -> 240
+                "144p" -> 144
+                else -> 0
+            }
+        }
+        return progressiveVideo?.url ?: metadata.formats?.firstOrNull()?.url
+    }
+
+    private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
+        val gd = android.graphics.drawable.GradientDrawable()
+        gd.setColor(android.graphics.Color.parseColor(color1))
+        gd.cornerRadius = round.toFloat()
+        gd.setStroke(border.toInt(), android.graphics.Color.parseColor(color2))
+        view.background = gd
+    }
+
+    private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
+        val GG = android.graphics.drawable.GradientDrawable()
+        GG.setColor(android.graphics.Color.parseColor(focus))
+        GG.cornerRadius = round.toFloat()
+        GG.setStroke(stroke.toInt(), android.graphics.Color.parseColor("#" + strokeclr.replace("#", "")))
+        val RE = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList(arrayOf(intArrayOf()), intArrayOf(android.graphics.Color.parseColor(pressed))),
+            GG,
+            null
+        )
+        view.background = RE
+    }
+
+    private fun checkStoragePermissionAndStart(metadata: VideoInfoResponse, url: String, formatType: String) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                @Suppress("DEPRECATION")
+                requestPermissions(arrayOf(permission), 100)
+                return
+            }
+        }
+        performStartDownload(metadata, url, formatType)
+    }
+
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(requireContext(), "Permission granted! Click download again.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(requireContext(), "Storage permission is required to download files.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun performStartDownload(metadata: VideoInfoResponse, url: String, formatType: String) {
+        val extension = when (formatType) {
+            "Audio" -> ".mp3"
+            "Video" -> ".mp4"
+            else -> ".png"
+        }
+        val mimeType = when (formatType) {
+            "Audio" -> "audio/mpeg"
+            "Video" -> "video/mp4"
+            else -> "image/png"
+        }
+        val title = metadata.title ?: "download"
+        val fileName = "${title.replace(Regex("[\\\\/:*?\"<>|]"), "_")}$extension"
+
+        val workInputData = androidx.work.workDataOf(
+            "url" to url,
+            "fileName" to fileName,
+            "mimeType" to mimeType,
+            "videoId" to (metadata.id ?: ""),
+            "title" to title,
+            "channelTitle" to (metadata.channelTitle ?: "Unknown"),
+            "thumbnailUrl" to (metadata.thumbnails?.lastOrNull()?.url ?: ""),
+            "formatType" to formatType
+        )
+
+        val workRequest = androidx.work.OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(workInputData)
+            .build()
+
+        val workManager = androidx.work.WorkManager.getInstance(requireContext())
+        workManager.enqueue(workRequest)
+
+        showDownloadProgressDialog(workRequest.id, title)
+    }
+
+    private fun fetchAndStartDownload(videoId: String, formatType: String) {
+        if (formatType == "Audio") {
+            binding.progressbarAudio.visibility = View.VISIBLE
+            binding.linearAudio.isEnabled = false
+        } else {
+            binding.progressbarVideo.visibility = View.VISIBLE
+            binding.linearVideo.isEnabled = false
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repository.getDownloadUrl(videoId).onSuccess { downloadResponse ->
+                if (formatType == "Audio") {
+                    binding.progressbarAudio.visibility = View.GONE
+                    binding.linearAudio.isEnabled = true
+                    val audioUrl = audioFormatUrl(downloadResponse)
+                    if (audioUrl != null) {
+                        checkStoragePermissionAndStart(downloadResponse, audioUrl, "Audio")
+                    } else {
+                        Toast.makeText(requireContext(), "No audio format available", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    binding.progressbarVideo.visibility = View.GONE
+                    binding.linearVideo.isEnabled = true
+                    val videoUrl = videoFormatUrl(downloadResponse)
+                    if (videoUrl != null) {
+                        checkStoragePermissionAndStart(downloadResponse, videoUrl, "Video")
+                    } else {
+                        Toast.makeText(requireContext(), "No video format available", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.onFailure { error ->
+                if (formatType == "Audio") {
+                    binding.progressbarAudio.visibility = View.GONE
+                    binding.linearAudio.isEnabled = true
+                } else {
+                    binding.progressbarVideo.visibility = View.GONE
+                    binding.linearVideo.isEnabled = true
+                }
+                Toast.makeText(requireContext(), "Failed to get download URL: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun showTipsDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_tips, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogView.findViewById<TextView>(R.id.b1).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun showInstructionsDialog() {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_instructions, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialogView.findViewById<TextView>(R.id.b1).setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun showDownloadProgressDialog(workId: java.util.UUID, title: String) {
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_download, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val t1 = dialogView.findViewById<TextView>(R.id.t1)
+        val t2 = dialogView.findViewById<TextView>(R.id.t2)
+        val progressbar = dialogView.findViewById<ProgressBar>(R.id.progressbar)
+        val b1 = dialogView.findViewById<TextView>(R.id.b1)
+        val b2 = dialogView.findViewById<TextView>(R.id.b2)
+
+        t1.text = "Downloading $title"
+        t2.text = "Starting download...\nProgress: 0%"
+        progressbar.max = 100
+        progressbar.progress = 0
+
+        val workManager = androidx.work.WorkManager.getInstance(requireContext())
+        workManager.getWorkInfoByIdLiveData(workId).observe(viewLifecycleOwner) { workInfo ->
+            if (workInfo != null) {
+                val progress = workInfo.progress.getInt("progress", 0)
+                progressbar.progress = progress
+                t2.text = "Progress: $progress%"
+
+                if (workInfo.state.isFinished) {
+                    if (workInfo.state == androidx.work.WorkInfo.State.SUCCEEDED) {
+                        Toast.makeText(requireContext(), "Download complete!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Download failed!", Toast.LENGTH_SHORT).show()
+                    }
+                    dialog.dismiss()
+                }
+            }
+        }
+
+        b1.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        b2.setOnClickListener {
+            workManager.cancelWorkById(workId)
+            dialog.dismiss()
+            Toast.makeText(requireContext(), "Download cancelled", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.show()
     }
 
     private fun observeState() {

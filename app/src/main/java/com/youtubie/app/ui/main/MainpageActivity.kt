@@ -71,10 +71,6 @@ class MainpageActivity : AppCompatActivity() {
         b1.text = "Stay"
         b2.text = "Quit"
         
-        _rippleRoundStroke(bg, "#FFFFFF", "#000000", 25.0, 0.0, "#000000")
-        _rippleRoundStroke(b1, "#FFFFFF", "#EEEEEE", 15.0, 2.0, "#EEEEEE")
-        _rippleRoundStroke(b2, "#000000", "#40ffffff", 15.0, 0.0, "#000000")
-        
         b1.setOnClickListener {
             dialog1.dismiss()
         }

@@ -21,5 +21,5 @@ interface YoutubeApiService {
         @Query("cgeo") cgeo: String = "GR",
         @Header("x-rapidapi-key") apiKey: String,
         @Header("x-rapidapi-host") apiHost: String = "yt-api.p.rapidapi.com"
-    ): Response<String> // Note: Need to check actual response format for /dl
+    ): Response<VideoInfoResponse>
 }
