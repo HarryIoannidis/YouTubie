@@ -1,58 +1,86 @@
-# YouTubie
+# YouTubie Android App
 
-YouTubie is a modern Android application designed to provide a seamless video discovery and playback experience. Built with the latest Android technologies, it leverages powerful libraries for networking, image loading, and dependency injection to ensure a fast and reliable user interface.
+Modern YouTube discovery and playback experience for Android - built with Kotlin, Retrofit, and Dagger Hilt.
+
+YouTubie is a sleek video discovery prototype built to demonstrate a modern Android development stack. It provides a seamless interface for searching, viewing, and managing video content, leveraging high-performance networking and efficient image loading.
+
+This is not an official YouTube client - it is a self-contained demo of a modular Android architecture using the RapidAPI YouTube data source.
 
 ## Features
+*   **🔍 High-speed video search** - find content instantly via RapidAPI integration.
+*   **📺 Seamless playback** - integrated video player with Material Design controls.
+*   **🖼️ Glide image caching** - smooth, flicker-free thumbnail loading and memory management.
+*   **🏗️ Hilt Dependency Injection** - robust, testable, and scalable architecture.
+*   **⚡ Coroutines & Flow** - modern asynchronous programming for a responsive UI.
+*   **🎨 Material Design 3** - follows the latest Android design guidelines.
+*   **📱 Picture-in-Picture (PiP)** - keep watching while multitasking on your device.
+*   **⚙️ WorkManager integration** - reliable background task processing.
 
-- **Video Search & Discovery**: Effortlessly search for and discover new content.
-- **Modern UI**: Clean and intuitive user interface following Material Design guidelines.
-- **Picture-in-Picture (PiP)**: Continue watching videos while using other apps.
-- **Hilt Dependency Injection**: Robust and scalable architecture using Dagger Hilt.
-- **Efficient Networking**: Fast API communication using Retrofit and OkHttp.
-- **Image Caching**: Smooth image loading and caching powered by Glide.
-- **Coroutines & Flow**: Asynchronous programming for a responsive user experience.
+## Screenshots
+*   Home Dashboard
+*   Video Search Results
+*   Playback Interface
 
-## Tech Stack
+For a full walkthrough of all interface screens, workflows, and dialogs, see the `SCREENSHOTS.md` tour.
 
-- **Kotlin**: The primary language for Android development.
-- **Retrofit & OkHttp**: For networking and API interactions.
-- **Glide**: For efficient image loading.
-- **Dagger Hilt**: For dependency injection.
-- **Jetpack Components**:
-    - ViewModel & LiveData
-    - View Binding
-    - WorkManager
-    - App Startup
-- **Material Design 3**: Modern UI components.
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
+Android Studio Koala+, Android SDK 37, RapidAPI Account.
 
-- Android Studio Koala or newer.
-- Android SDK 37 (API level 37).
-- A RapidAPI Key (for YouTube data).
+### 1. Clone the repository
+```bash
+git clone https://github.com/HarryIoannidis/YouTubie.git
+cd YouTubie
+```
 
-### Configuration
+### 2. Configure API Keys
+The app requires a `RAPID_API_KEY` to fetch data.
+1. Create a `local.properties` file in the root directory.
+2. Add your key:
+```properties
+RAPID_API_KEY=your_actual_rapidapi_key_here
+```
 
-Before building the app, you need to provide your `RAPID_API_KEY`. 
+### 3. Build the project
+Open the project in Android Studio and sync with Gradle.
 
-1. Create a `local.properties` file in the root directory if it doesn't exist.
-2. Add your API key:
-   ```properties
-   RAPID_API_KEY=your_actual_api_key_here
-   ```
+### 4. Run the app
+```bash
+./gradlew installDebug
+```
+Or use the **Run** button in Android Studio on a device with API level 23+.
 
-### Building & Running
+## Architecture
+```
+youtubie/
+├── app/
+│   ├── src/main/java/com/youtubie/app/
+│   │   ├── data/        # Repository and Remote Data Source (Retrofit)
+│   │   ├── di/          # Hilt Modules (Network, Repository)
+│   │   ├── ui/          # ViewModels, Fragments, and Activities
+│   │   └── util/        # Preferences and UI helpers
+│   └── src/main/res/    # Material 3 resources, layouts, and animations
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/HarryIoannidis/YouTubie.git
-   ```
-2. Open the project in Android Studio.
-3. Sync project with Gradle files.
-4. Run the app on an emulator or a physical device (API level 23+).
+### Technical Interface
+| Component | Implementation |
+| :--- | :--- |
+| **Networking** | Retrofit 2 + OkHttp 4 |
+| **Dependency Injection** | Dagger Hilt |
+| **Image Loading** | Glide |
+| **Concurrency** | Kotlin Coroutines + Flow |
+| **UI Framework** | Jetpack (ViewBinding, LiveData, ViewModel) |
+| **JSON Parsing** | GSON |
+| **Background Tasks** | WorkManager |
+
+## Security and Configuration
+*   **API Key Protection**: The `RAPID_API_KEY` is injected via `BuildConfig` and sourced from `local.properties`, ensuring secrets are never committed to version control.
+*   **Secure Networking**: Enforces HTTPS for all API calls via Retrofit configuration.
+*   **ProGuard/R8**: Hardened release builds with optimized code shrinking and obfuscation.
+
+## Contributing
+See `CONTRIBUTING.md` for guidelines.
 
 ## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT © YouTubie Contributors
