@@ -1,0 +1,69 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    id 'kotlin-kapt'
+    alias(libs.plugins.hilt.android)
+}
+
+android {
+    compileSdk 37
+    namespace "com.youtubie.app"
+
+    defaultConfig {
+        applicationId "com.youtubie.app"
+        minSdkVersion 23
+        targetSdkVersion 37
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "RAPID_API_KEY", "\"${project.findProperty('RAPID_API_KEY') ?: ''}\""
+        }
+        debug {
+            buildConfigField "String", "RAPID_API_KEY", "\"${project.findProperty('RAPID_API_KEY') ?: ''}\""
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    buildFeatures {
+        buildConfig true
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core.ktx
+    implementation libs.material
+    implementation libs.glide
+    implementation libs.gson
+    implementation libs.okhttp
+    implementation libs.retrofit
+    implementation libs.retrofit.gson
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+    implementation libs.androidx.work.runtime
+    implementation libs.androidx.fragment.ktx
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.livedata.ktx
+
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.androidx.test.espresso.core
+}

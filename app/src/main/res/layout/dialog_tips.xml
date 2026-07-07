@@ -1,0 +1,147 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/bg"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dp"
+		android:padding="16dp"
+		android:background="#FFFFFF"
+		android:orientation="vertical">
+		<TextView
+			android:id="@+id/t1"
+			android:focusable="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
+			android:text="Tips for downloading."
+			android:textSize="16sp"
+			android:textColor="#212121" />
+		<LinearLayout
+			android:id="@+id/linearTip1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t2"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="•"
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t3"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="To successfully download YouTube videos you need to have a stable internet connection and you need to have granted the necessary storage permissions."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearTip2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t4"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="•"
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t5"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="Some videos are not downloadable due to YouTube restrictions on copyrighted material such as VEVO videos. To be able to download such VEVO songs, try searching for:\n1. Lyrics-only videos\n2. Same songs uploaded by non-VEVO channels\n3. Automatically generated topics from YouTube"
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearTip3"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t6"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="•"
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t7"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="If you face a &quot;Could not search for video&quot; error then try your luck some time later. Sometimes its a server-wise problem and not the video's or YouTube's fault."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearTip4"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t8"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="•"
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t9"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="Long-clicking the thumbnail of your searched YouTube video will let you download it in png format and HD quality."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<TextView
+			android:id="@+id/b1"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="15dp"
+			android:padding="12dp"
+			android:background="#F5F5F5"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Dismiss"
+			android:textSize="14sp"
+			android:textColor="#616161"
+			android:layout_weight="1" />
+	</LinearLayout>
+</LinearLayout>

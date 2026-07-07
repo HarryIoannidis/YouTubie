@@ -1,0 +1,119 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/bg2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dp"
+		android:padding="17dp"
+		android:background="#FFFFFF"
+		android:orientation="vertical">
+		<LinearLayout
+			android:id="@+id/bg1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="17dp"
+			android:background="#FFFFFF"
+			android:orientation="horizontal">
+			<LinearLayout
+				android:id="@+id/linear10"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:orientation="vertical">
+				<LinearLayout
+					android:id="@+id/card"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:orientation="vertical">
+					<ImageView
+						android:id="@+id/i1"
+						android:focusable="false"
+						android:layout_width="50dp"
+						android:layout_height="50dp"
+						android:src="@drawable/ytlogo"
+						android:scaleType="centerInside" />
+				</LinearLayout>
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linear12"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:layout_marginLeft="17dp"
+				android:gravity="left|center_vertical"
+				android:orientation="vertical">
+				<TextView
+					android:id="@+id/t3"
+					android:focusable="false"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="3dp"
+					android:text="YouTubiee"
+					android:textSize="14sp"
+					android:textColor="#212121" />
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linear13"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:padding="8dp"
+				android:gravity="right|center_vertical"
+				android:orientation="vertical"
+				android:layout_gravity="center_horizontal|center_vertical">
+				<ImageView
+					android:id="@+id/i2"
+					android:focusable="false"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:padding="10dp"
+					android:src="@drawable/ic_clear_black"
+					android:scaleType="fitXY" />
+			</LinearLayout>
+		</LinearLayout>
+		<TextView
+			android:id="@+id/b1"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="12dp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="About"
+			android:textSize="12sp"
+			android:textColor="#424242" />
+		<TextView
+			android:id="@+id/b2"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="17dp"
+			android:padding="12dp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="More apps"
+			android:textSize="12sp"
+			android:textColor="#424242" />
+		<TextView
+			android:id="@+id/b3"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="17dp"
+			android:layout_marginBottom="17dp"
+			android:padding="12dp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Check for update"
+			android:textSize="12sp"
+			android:textColor="#424242" />
+		<TextView
+			android:id="@+id/t4"
+			android:focusable="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Version 1.0.0"
+			android:textSize="12sp"
+			android:textColor="#9E9E9E" />
+	</LinearLayout>
+</LinearLayout>

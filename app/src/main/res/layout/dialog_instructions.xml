@@ -1,0 +1,179 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/bg"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_margin="5dp"
+		android:padding="16dp"
+		android:background="#FFFFFF"
+		android:orientation="vertical">
+		<TextView
+			android:id="@+id/t1"
+			android:focusable="false"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
+			android:text="Instructions for searching and downloading."
+			android:textSize="16sp"
+			android:textColor="#212121" />
+		<LinearLayout
+			android:id="@+id/linearInstruction1"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t2"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="1."
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t3"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:text="Paste the link you copied in the field and then press the &quot;Search&quot; button. Be aware that only YouTube videos can be searched containing the &quot;youtu.be&quot; or &quot;youtube.com&quot; and not YouTube shorts."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearInstruction2"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t4"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="2."
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t5"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:text="While searching, do not close the application nor the internet connection. Once the search is successful, you can view the video's data on your screen."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearInstruction3"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t6"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="3."
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t7"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:text="Click the &quot;Audio&quot; or &quot;Video&quot; button to download the video in your preferred format in HD quality."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearInstruction4"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t8"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="4."
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t9"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:text="After downloading anything, it will show in the download history screen. Swipe left from the homepage to view the history."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearInstruction5"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/t10"
+				android:focusable="false"
+				android:layout_width="20dp"
+				android:layout_height="match_parent"
+				android:paddingTop="8dp"
+				android:paddingBottom="8dp"
+				android:text="5."
+				android:textSize="20sp"
+				android:textColor="#616161" />
+			<TextView
+				android:id="@+id/t11"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="8dp"
+				android:paddingRight="8dp"
+				android:paddingBottom="8dp"
+				android:text="Click the &quot;Search another video&quot; button to clear your current search and start again. Your current search will not be saved."
+				android:textSize="14sp"
+				android:textColor="#757575" />
+		</LinearLayout>
+		<TextView
+			android:id="@+id/b1"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="15dp"
+			android:padding="12dp"
+			android:background="#F5F5F5"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="Dismiss"
+			android:textSize="14sp"
+			android:textColor="#616161"
+			android:layout_weight="1" />
+	</LinearLayout>
+</LinearLayout>

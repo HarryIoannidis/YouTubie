@@ -1,0 +1,129 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/linearBG"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#FFFFFF"
+		android:orientation="vertical">
+		<LinearLayout
+			android:id="@+id/linearActionBar"
+			android:layout_width="match_parent"
+			android:layout_height="85dp"
+			android:paddingTop="25dp"
+			android:background="#FAFAFA"
+			android:gravity="center_horizontal|bottom"
+			android:orientation="vertical">
+			<LinearLayout
+				android:id="@+id/linear1"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="10dp"
+				android:orientation="horizontal">
+				<TextView
+					android:id="@+id/textviewMainTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="71dp"
+					android:padding="8dp"
+					android:gravity="center_horizontal|center_vertical"
+					android:text="History"
+					android:textSize="16sp"
+					android:textColor="#000000"
+					android:layout_weight="1" />
+				<ImageView
+					android:id="@+id/imageviewHistory"
+					android:layout_width="35dp"
+					android:layout_height="35dp"
+					android:layout_marginRight="36dp"
+					android:padding="8dp"
+					android:src="@drawable/ic_delete_black"
+					android:scaleType="fitXY" />
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/divider"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:padding="8dp"
+				android:background="#E0E0E0"
+				android:orientation="horizontal" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linearMain"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@android:color/transparent"
+			android:orientation="vertical">
+			<LinearLayout
+				android:id="@+id/linearHistory"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_margin="15dp"
+				android:orientation="vertical"
+				android:layout_gravity="center_horizontal|center_vertical">
+				<ListView
+					android:id="@+id/listviewHistory"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:dividerHeight="0dp"
+					android:divider="@null"
+					android:choiceMode="none"
+					android:requiresFadingEdge="vertical"
+					android:fadingEdgeLength="10dp"
+					tools:listitem="@layout/download_history" />
+			</LinearLayout>
+			<LinearLayout
+				android:id="@+id/linearError"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="30dp"
+				android:layout_marginRight="10dp"
+				android:layout_marginBottom="10dp"
+				android:paddingTop="50dp"
+				android:gravity="center_horizontal|center_vertical"
+				android:orientation="vertical">
+				<ImageView
+					android:id="@+id/imageviewError"
+					android:layout_width="300dp"
+					android:layout_height="300dp"
+					android:layout_marginTop="5dp"
+					android:src="@drawable/notfound"
+					android:scaleType="centerInside"
+					android:alpha="0.9" />
+				<TextView
+					android:id="@+id/errorTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="15dp"
+					android:text="Nothing here..."
+					android:textSize="18sp"
+					android:textColor="#000000" />
+				<TextView
+					android:id="@+id/errorText"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="8dp"
+					android:layout_marginRight="8dp"
+					android:padding="8dp"
+					android:gravity="center_horizontal|center_vertical"
+					android:text="Your download history is empty."
+					android:textSize="14sp"
+					android:textColor="#000000" />
+				<LinearLayout
+					android:id="@+id/linearRefresh"
+					android:layout_width="match_parent"
+					android:layout_height="45dp"
+					android:layout_margin="15dp"
+					android:padding="8dp"
+					android:gravity="center_horizontal|center_vertical"
+					android:orientation="horizontal" />
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+</LinearLayout>

@@ -1,0 +1,71 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+	<LinearLayout
+		android:id="@+id/linearBG"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:background="#FFFFFF"
+		android:orientation="vertical">
+		<LinearLayout
+			android:id="@+id/linearActionBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="#FFFFFF"
+			android:orientation="vertical">
+			<LinearLayout
+				android:id="@+id/linearTopAppBar"
+				android:layout_width="match_parent"
+				android:layout_height="83dp"
+				android:paddingTop="28dp"
+				android:paddingBottom="5dp"
+				android:gravity="center_horizontal|center_vertical"
+				android:orientation="horizontal">
+				<ImageView
+					android:id="@+id/imageview1"
+					android:layout_width="45dp"
+					android:layout_height="45dp"
+					android:src="@drawable/ytlogo"
+					android:scaleType="fitXY" />
+				<TextView
+					android:id="@+id/textviewMainTitle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:padding="8dp"
+					android:gravity="center_horizontal|center_vertical"
+					android:text="YouTubiee"
+					android:textSize="16sp"
+					android:textStyle="bold"
+					android:textColor="#000000" />
+			</LinearLayout>
+			<com.google.android.material.tabs.TabLayout
+				android:id="@+id/tablayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="#FFFFFF"
+				app:tabGravity="fill"
+				app:tabMode="fixed"
+				app:tabIndicatorHeight="3dp"
+				app:tabIndicatorColor="@android:color/white"
+				app:tabSelectedTextColor="@android:color/white"
+				app:tabTextColor="@android:color/white"
+				app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+			<LinearLayout
+				android:id="@+id/divider"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:padding="8dp"
+				android:background="#E0E0E0"
+				android:orientation="horizontal" />
+		</LinearLayout>
+		<androidx.viewpager2.widget.ViewPager2
+			android:id="@+id/viewpager_about"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:padding="8dp" />
+	</LinearLayout>
+</LinearLayout>
