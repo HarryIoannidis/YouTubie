@@ -1,5 +1,9 @@
 # YouTubie Android App
 
+![Kotlin](https://img.shields.io/badge/language-Kotlin-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
+
 Modern YouTube discovery and playback experience for Android - built with Kotlin, Retrofit, and Dagger Hilt.
 
 YouTubie is a sleek video discovery prototype built to demonstrate a modern Android development stack. It provides a seamless interface for searching, viewing, and managing video content, leveraging high-performance networking and efficient image loading.
