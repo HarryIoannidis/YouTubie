@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
-    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -43,6 +43,14 @@ android {
         buildConfig true
         viewBinding true
     }
+}
+
+kapt {
+    correctErrorTypes = true
+}
+
+hilt {
+    enableAggregatingTask = true
 }
 
 dependencies {

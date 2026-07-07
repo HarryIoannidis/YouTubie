@@ -28,7 +28,7 @@ class AboutActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.textviewMainTitle.text = "About YouTubie"
         
-        binding.viewpagerAbout.adapter = PagerAdapter(this)
+        binding.viewpagerAbout.adapter = AboutPagerAdapter(this)
         
         TabLayoutMediator(binding.tablayout, binding.viewpagerAbout) { tab, position ->
             tab.text = when (position) {
@@ -39,17 +39,17 @@ class AboutActivity : AppCompatActivity() {
             }
         }.attach()
     }
+}
 
-    private inner class PagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 3
+class AboutPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+    override fun getItemCount(): Int = 3
 
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                0 -> IntroFragment1()
-                1 -> IntroFragment2()
-                2 -> IntroFragment3()
-                else -> IntroFragment1()
-            }
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> IntroFragment1()
+            1 -> IntroFragment2()
+            2 -> IntroFragment3()
+            else -> IntroFragment1()
         }
     }
 }
