@@ -11,10 +11,10 @@ YouTubie is a sleek video discovery prototype built to demonstrate a modern Andr
 
 ## Features
 *   **🔍 High-speed video search** - find content instantly via RapidAPI integration.
-*   **📺 Seamless playback** - integrated video player with Material Design controls.
+*   **📺 Seamless download** - integrated video downloader with Material Design controls.
 *   **🖼️ Glide image caching** - smooth, flicker-free thumbnail loading and memory management.
 *   **🏗️ Hilt Dependency Injection** - robust, testable, and scalable architecture.
-*   ** ⚡ Coroutines & Flow** - modern asynchronous programming for a responsive UI.
+*   **⚡ Coroutines & Flow** - modern asynchronous programming for a responsive UI.
 *   **🎨 Material Design 3** - follows the latest Android design guidelines.
 *   **⚙️ WorkManager integration** - reliable background task processing.
 
