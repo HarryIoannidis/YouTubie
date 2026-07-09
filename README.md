@@ -4,11 +4,10 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
 
-Modern YouTube discovery and playback experience for Android - built with Kotlin, Retrofit, and Dagger Hilt.
+Modern YouTube download experience for Android - built with Kotlin and Retrofit
 
-YouTubie is a sleek video discovery prototype built to demonstrate a modern Android development stack. It provides a seamless interface for searching, viewing, and managing video content, leveraging high-performance networking and efficient image loading.
+YouTubie is a sleek video discovery prototype built to demonstrate a modern Android development stack. It provides a seamless interface for searching, and downloading video content.
 
-This is not an official YouTube client - it is a self-contained demo of a modular Android architecture using the RapidAPI YouTube data source.
 
 ## Features
 *   **🔍 High-speed video search** - find content instantly via RapidAPI integration.
@@ -22,7 +21,6 @@ This is not an official YouTube client - it is a self-contained demo of a modula
 ## Screenshots
 *   Home Dashboard
 *   Video Search Results
-*   Playback Interface
 
 For a full walkthrough of all interface screens, workflows, and dialogs, see the `SCREENSHOTS.md` tour.
 
