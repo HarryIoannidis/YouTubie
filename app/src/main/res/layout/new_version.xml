@@ -96,22 +96,11 @@
 			android:textSize="12sp"
 			android:textColor="#424242" />
 		<TextView
-			android:id="@+id/b3"
-			android:focusable="false"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="17dp"
-			android:layout_marginBottom="17dp"
-			android:padding="12dp"
-			android:gravity="center_horizontal|center_vertical"
-			android:text="Check for update"
-			android:textSize="12sp"
-			android:textColor="#424242" />
-		<TextView
 			android:id="@+id/t4"
 			android:focusable="false"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
 			android:text="Version 1.0.0"
 			android:textSize="12sp"
 			android:textColor="#9E9E9E" />

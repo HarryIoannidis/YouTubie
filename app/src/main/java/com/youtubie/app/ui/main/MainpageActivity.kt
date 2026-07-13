@@ -101,25 +101,19 @@ class MainpageActivity : AppCompatActivity() {
 
         val b1 = bottomSheetView.findViewById<TextView>(R.id.b1)
         val b2 = bottomSheetView.findViewById<TextView>(R.id.b2)
-        val b3 = bottomSheetView.findViewById<TextView>(R.id.b3)
         val i2 = bottomSheetView.findViewById<ImageView>(R.id.i2)
         val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
 
         _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
         _rippleRoundStroke(b1, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
         _rippleRoundStroke(b2, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(b3, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
         _rippleRoundStroke(i2, "#FFFFFF", "#40000000", 90.0, 0.0, "#FFFFFF")
         
         i2.setImageResource(R.drawable.cross)
         
-        b2.setOnClickListener {
+        b1.setOnClickListener {
             intentObj.setClass(applicationContext, AboutActivity::class.java)
             startActivity(intentObj)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                @Suppress("DEPRECATION")
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
         }
         
         i2.setOnClickListener {
@@ -174,7 +168,7 @@ class MainpageActivity : AppCompatActivity() {
         }
         
         binding.navig.elevation = 0f
-        binding.navig.itemIconSize = 45
+        binding.navig.itemIconSize = 36
         binding.fab.setImageResource(R.drawable.menu_burger)
         binding.navig.menu.clear()
         binding.navig.menu.add(0, 0, 0, "Home").setIcon(R.drawable.home)

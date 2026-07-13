@@ -21,7 +21,7 @@ class HistoryAdapter(
         val item = getItem(position) ?: return view
 
         val linearBG = view.findViewById<android.widget.LinearLayout>(R.id.linearBG)
-        _RoundAndBorder(linearBG, "#FFFFFF", 2.0, "#EEEEEE", 20.0)
+        _rippleRoundStroke(linearBG, "#FFFFFF", "#EEEEEE", 20.0, 2.0, "EEEEEE")
 
         val thumbnailView = view.findViewById<ImageView>(R.id.imageview1)
         val titleView = view.findViewById<TextView>(R.id.title)
@@ -42,11 +42,16 @@ class HistoryAdapter(
         return view
     }
 
-    private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
-        val gd = android.graphics.drawable.GradientDrawable()
-        gd.setColor(android.graphics.Color.parseColor(color1))
-        gd.cornerRadius = round.toFloat()
-        gd.setStroke(border.toInt(), android.graphics.Color.parseColor(color2))
-        view.background = gd
+    private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
+        val GG = android.graphics.drawable.GradientDrawable()
+        GG.setColor(android.graphics.Color.parseColor(focus))
+        GG.cornerRadius = round.toFloat()
+        GG.setStroke(stroke.toInt(), android.graphics.Color.parseColor("#" + strokeclr.replace("#", "")))
+        val RE = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList(arrayOf(intArrayOf()), intArrayOf(android.graphics.Color.parseColor(pressed))),
+            GG,
+            null
+        )
+        view.background = RE
     }
 }

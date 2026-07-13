@@ -1,5 +1,4 @@
 package com.youtubie.app.ui.about
-import com.youtubie.app.R
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +9,8 @@ import com.youtubie.app.databinding.AboutActivityBinding
 import com.youtubie.app.ui.intro.IntroFragment1
 import com.youtubie.app.ui.intro.IntroFragment2
 import com.youtubie.app.ui.intro.IntroFragment3
+import com.youtubie.app.ui.intro.AboutInstructionsFragment
+import com.youtubie.app.ui.intro.AboutTipsFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,10 +47,10 @@ class AboutPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(acti
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> IntroFragment1()
-            1 -> IntroFragment2()
+            0 -> AboutInstructionsFragment()
+            1 -> AboutTipsFragment()
             2 -> IntroFragment3()
-            else -> IntroFragment1()
+            else -> AboutInstructionsFragment()
         }
     }
 }

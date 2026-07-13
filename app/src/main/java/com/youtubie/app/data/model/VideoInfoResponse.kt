@@ -8,7 +8,8 @@ data class VideoInfoResponse(
     @SerializedName("thumbnail") val thumbnails: List<Thumbnail>?,
     @SerializedName("channelTitle") val channelTitle: String?,
     @SerializedName("viewCount") val viewCount: String?,
-    @SerializedName("lengthText") val duration: String?,
+    @SerializedName("lengthSeconds") val durationSeconds: String?,
+    @SerializedName("lengthText") val durationText: String?,
     @SerializedName("description") val description: String?,
     @SerializedName("formats") val formats: List<Format>?,
     @SerializedName("adaptiveFormats") val adaptiveFormats: List<AdaptiveFormat>?
@@ -43,7 +44,7 @@ data class DownloadHistoryItem(
     val channelTitle: String,
     val thumbnailUrl: String,
     val downloadDate: String,
-    val format: String // "Audio" or "Video"
+    val format: String, // "Audio" or "Video"
+    val viewCount: String? = null,
+    val duration: String? = null
 )
-
-

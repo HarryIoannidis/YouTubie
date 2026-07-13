@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -19,9 +20,12 @@ import com.youtubie.app.data.repository.YoutubeRepository
 import com.youtubie.app.data.model.VideoInfoResponse
 import com.youtubie.app.data.download.DownloadWorker
 import android.os.Build
+import android.view.inputmethod.InputMethodManager
+import android.content.Context
 import javax.inject.Inject
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -33,6 +37,35 @@ class HomeFragment : Fragment() {
 
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
+
+    // Track active download for re-showing progress dialog
+    private var activeDownloadWorkId: UUID? = null
+    private var activeDownloadTitle: String? = null
+    private var isDownloadToastShown = false
+
+    // Pending download info for permission flow
+    private var pendingDownloadMetadata: VideoInfoResponse? = null
+    private var pendingDownloadUrl: String? = null
+    private var pendingDownloadFormatType: String? = null
+
+    private val storagePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Auto-resume the pending download
+            val metadata = pendingDownloadMetadata
+            val url = pendingDownloadUrl
+            val formatType = pendingDownloadFormatType
+            if (metadata != null && url != null && formatType != null) {
+                performStartDownload(metadata, url, formatType)
+            }
+        } else {
+            Toast.makeText(requireContext(), "Storage permission is required to download files.", Toast.LENGTH_SHORT).show()
+        }
+        pendingDownloadMetadata = null
+        pendingDownloadUrl = null
+        pendingDownloadFormatType = null
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,21 +89,23 @@ class HomeFragment : Fragment() {
         binding.progressbarRefresh.visibility = View.GONE
 
         // Apply card and pill styles programmatically to match design
-        _RoundAndBorder(binding.linearForSearchMain, "#FFFFFF", 2.0, "#EEEEEE", 25.0)
-        _RoundAndBorder(binding.linearSearchResult, "#FFFFFF", 2.0, "#EEEEEE", 25.0)
+        _RoundAndBorder(binding.linearForSearchMain, "#FAFAFA", 2.0, "#DDDDDD", 30.0)
+        _RoundAndBorder(binding.linearSearchResult, "#FAFAFA", 2.0, "#DDDDDD", 30.0)
         _RoundAndBorder(binding.linearEditText, "#FFFFFF", 2.0, "#CCCCCC", 90.0)
-        _rippleRoundStroke(binding.linearSearch, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
-        _rippleRoundStroke(binding.linearRefresh, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
-        _rippleRoundStroke(binding.linearSearchAgain, "#FFFFFF", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+        _rippleRoundStroke(binding.linearSearch, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+        _rippleRoundStroke(binding.linearRefresh, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
+        _rippleRoundStroke(binding.linearSearchAgain, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
 
-        // Style the tips and instructions links to be blue and underlined
-        binding.textviewTips.setTextColor(android.graphics.Color.parseColor("#2196F3"))
-        binding.textviewTips.paintFlags = binding.textviewTips.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
-        binding.textviewInstructions.setTextColor(android.graphics.Color.parseColor("#2196F3"))
-        binding.textviewInstructions.paintFlags = binding.textviewInstructions.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
+        // Reduce thumbnail radius as requested
+        binding.cardview.radius = 20f
+
+        // Style the tips and instructions links as underlined black text
+        binding.textviewTips.paintFlags = binding.textviewTips.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
+        binding.textviewInstructions.paintFlags = binding.textviewInstructions.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
 
         binding.linearSearch.isClickable = true
         binding.linearSearch.setOnClickListener {
+            hideKeyboard()
             val url = binding.searchEditText.text.toString()
             if (url.isNotEmpty()) {
                 viewModel.fetchVideoMetadata(url)
@@ -82,15 +117,30 @@ class HomeFragment : Fragment() {
         binding.imageClear.setOnClickListener {
             binding.searchEditText.setText("")
         }
+
+        binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyboard()
+                val url = binding.searchEditText.text.toString()
+                if (url.isNotEmpty()) {
+                    viewModel.fetchVideoMetadata(url)
+                }
+                true
+            } else {
+                false
+            }
+        }
         
         binding.linearSearchAgain.setOnClickListener {
-            binding.linearForSearch.visibility = View.VISIBLE
-            binding.linearResult.visibility = View.GONE
+            binding.linearResult.fadeOut {
+                binding.linearForSearch.fadeIn()
+            }
             binding.linearError.visibility = View.GONE
             binding.searchEditText.setText("")
         }
 
         binding.linearRefresh.setOnClickListener {
+            hideKeyboard()
             val url = binding.searchEditText.text.toString()
             if (url.isNotEmpty()) {
                 viewModel.fetchVideoMetadata(url)
@@ -106,6 +156,13 @@ class HomeFragment : Fragment() {
         }
 
         binding.linearAudio.setOnClickListener {
+            // If a download is active, re-show the progress dialog
+            val activeId = activeDownloadWorkId
+            val activeTitle = activeDownloadTitle
+            if (activeId != null && activeTitle != null) {
+                showDownloadProgressDialog(activeId, activeTitle)
+                return@setOnClickListener
+            }
             val state = viewModel.uiState.value
             if (state is HomeUiState.Success) {
                 val metadata = state.metadata
@@ -119,6 +176,13 @@ class HomeFragment : Fragment() {
         }
 
         binding.linearVideo.setOnClickListener {
+            // If a download is active, re-show the progress dialog
+            val activeId = activeDownloadWorkId
+            val activeTitle = activeDownloadTitle
+            if (activeId != null && activeTitle != null) {
+                showDownloadProgressDialog(activeId, activeTitle)
+                return@setOnClickListener
+            }
             val state = viewModel.uiState.value
             if (state is HomeUiState.Success) {
                 val metadata = state.metadata
@@ -142,6 +206,11 @@ class HomeFragment : Fragment() {
             }
             true
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
     private fun audioFormatUrl(metadata: VideoInfoResponse): String? {
@@ -199,23 +268,15 @@ class HomeFragment : Fragment() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                @Suppress("DEPRECATION")
-                requestPermissions(arrayOf(permission), 100)
+                // Store pending download info so we can auto-resume on grant
+                pendingDownloadMetadata = metadata
+                pendingDownloadUrl = url
+                pendingDownloadFormatType = formatType
+                storagePermissionLauncher.launch(permission)
                 return
             }
         }
         performStartDownload(metadata, url, formatType)
-    }
-
-    @Deprecated("Deprecated in Java")
-    @Suppress("DEPRECATION")
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100 && grantResults.isNotEmpty() && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(requireContext(), "Permission granted! Click download again.", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(requireContext(), "Storage permission is required to download files.", Toast.LENGTH_SHORT).show()
-        }
     }
 
     private fun performStartDownload(metadata: VideoInfoResponse, url: String, formatType: String) {
@@ -240,7 +301,9 @@ class HomeFragment : Fragment() {
             "title" to title,
             "channelTitle" to (metadata.channelTitle ?: "Unknown"),
             "thumbnailUrl" to (metadata.thumbnails?.lastOrNull()?.url ?: ""),
-            "formatType" to formatType
+            "formatType" to formatType,
+            "viewCount" to (metadata.viewCount ?: "0"),
+            "duration" to formatDuration(metadata.durationSeconds, metadata.durationText)
         )
 
         val workRequest = androidx.work.OneTimeWorkRequestBuilder<DownloadWorker>()
@@ -250,6 +313,8 @@ class HomeFragment : Fragment() {
         val workManager = androidx.work.WorkManager.getInstance(requireContext())
         workManager.enqueue(workRequest)
 
+        activeDownloadWorkId = workRequest.id
+        activeDownloadTitle = title
         showDownloadProgressDialog(workRequest.id, title)
     }
 
@@ -321,6 +386,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun showDownloadProgressDialog(workId: java.util.UUID, title: String) {
+        isDownloadToastShown = false
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_download, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -347,10 +413,13 @@ class HomeFragment : Fragment() {
                 progressbar.progress = progress
                 t2.text = "Progress: $progress%"
 
-                if (workInfo.state.isFinished) {
+                if (workInfo.state.isFinished && !isDownloadToastShown) {
+                    isDownloadToastShown = true
+                    activeDownloadWorkId = null
+                    activeDownloadTitle = null
                     if (workInfo.state == androidx.work.WorkInfo.State.SUCCEEDED) {
                         Toast.makeText(requireContext(), "Download complete!", Toast.LENGTH_SHORT).show()
-                    } else {
+                    } else if (workInfo.state == androidx.work.WorkInfo.State.FAILED) {
                         Toast.makeText(requireContext(), "Download failed!", Toast.LENGTH_SHORT).show()
                     }
                     dialog.dismiss()
@@ -359,10 +428,13 @@ class HomeFragment : Fragment() {
         }
 
         b1.setOnClickListener {
+            Toast.makeText(requireContext(), "Download continuing in background", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
 
         b2.setOnClickListener {
+            activeDownloadWorkId = null
+            activeDownloadTitle = null
             workManager.cancelWorkById(workId)
             dialog.dismiss()
             Toast.makeText(requireContext(), "Download cancelled", Toast.LENGTH_SHORT).show()
@@ -390,28 +462,32 @@ class HomeFragment : Fragment() {
                         is HomeUiState.Success -> {
                             binding.progressBar.visibility = View.GONE
                             binding.textviewSearch.visibility = View.VISIBLE
-                            binding.linearForSearch.visibility = View.GONE
-                            binding.linearResult.visibility = View.VISIBLE
                             binding.linearError.visibility = View.GONE
                             
-                            val metadata = state.metadata
-                            binding.textviewTitle.text = metadata.title ?: "No Title"
-                            binding.textviewChannel.text = metadata.channelTitle ?: "Unknown Channel"
-                            binding.textviewViews.text = metadata.viewCount ?: "0"
-                            binding.textviewDuration.text = metadata.duration ?: "0:00"
-                            
-                            val thumbnailUrl = metadata.thumbnails?.lastOrNull()?.url
-                            Glide.with(this@HomeFragment)
-                                .load(thumbnailUrl)
-                                .placeholder(R.drawable.youtube_thumbnail)
-                                .into(binding.thumbnail)
+                            // Fade out search, fade in result
+                            binding.linearForSearch.fadeOut {
+                                val metadata = state.metadata
+                                binding.textviewTitle.text = metadata.title ?: "No Title"
+                                binding.textviewChannel.text = metadata.channelTitle ?: "Unknown Channel"
+                                binding.textviewViews.text = metadata.viewCount ?: "0"
+                                binding.textviewDuration.text = formatDuration(metadata.durationSeconds, metadata.durationText)
+                                
+                                val thumbnailUrl = metadata.thumbnails?.lastOrNull()?.url
+                                Glide.with(this@HomeFragment)
+                                    .load(thumbnailUrl)
+                                    .placeholder(R.drawable.youtube_thumbnail)
+                                    .into(binding.thumbnail)
+                                
+                                binding.linearResult.fadeIn()
+                            }
                         }
                         is HomeUiState.Error -> {
                             binding.progressBar.visibility = View.GONE
                             binding.textviewSearch.visibility = View.VISIBLE
-                            binding.linearForSearch.visibility = View.GONE
+                            binding.linearForSearch.fadeOut {
+                                binding.linearError.fadeIn()
+                            }
                             binding.linearResult.visibility = View.GONE
-                            binding.linearError.visibility = View.VISIBLE
                             binding.errorText.text = state.message
                         }
                     }
@@ -420,8 +496,34 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun formatDuration(secondsStr: String?, text: String?): String {
+        if (!text.isNullOrEmpty()) return text
+        val seconds = secondsStr?.toLongOrNull() ?: 0L
+        val h = seconds / 3600
+        val m = (seconds % 3600) / 60
+        val s = seconds % 60
+        return if (h > 0) {
+            String.format("%d:%02d:%02d", h, m, s)
+        } else {
+            String.format("%d:%02d", m, s)
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    // Fade animation utilities
+    private fun View.fadeIn(duration: Long = 150) {
+        alpha = 0f
+        visibility = View.VISIBLE
+        animate().alpha(1f).setDuration(duration).start()
+    }
+
+    private fun View.fadeOut(duration: Long = 150, onEnd: () -> Unit = {}) {
+        animate().alpha(0f).setDuration(duration)
+            .withEndAction { visibility = View.GONE; onEnd() }
+            .start()
     }
 }

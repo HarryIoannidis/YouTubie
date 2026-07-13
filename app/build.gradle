@@ -44,6 +44,16 @@ android {
         buildConfig true
         viewBinding true
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                'src/main/res',
+                'src/main/res-xml',
+                'src/main/res-img'
+            ]
+        }
+    }
 }
 
 kapt {

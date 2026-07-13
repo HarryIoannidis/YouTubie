@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.youtubie.app.databinding.MainBinding
 import com.youtubie.app.ui.welcome.WelcomeActivity
 import com.youtubie.app.util.PreferenceManager
@@ -24,6 +27,11 @@ class MainActivity : AppCompatActivity() {
         binding = MainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Hide navigation and status bars for immersive splash
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+
         // Splash screen logic
         Handler(Looper.getMainLooper()).postDelayed({
             val targetActivity = if (preferenceManager.isFirstLaunch()) {
@@ -34,6 +42,7 @@ class MainActivity : AppCompatActivity() {
             
             val intent = Intent(this, targetActivity)
             startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             finish()
         }, 2000)
     }

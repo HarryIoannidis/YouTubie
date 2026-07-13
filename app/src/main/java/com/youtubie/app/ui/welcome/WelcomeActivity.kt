@@ -6,20 +6,22 @@ import com.youtubie.app.ui.intro.IntroFragment1
 import com.youtubie.app.ui.intro.IntroFragment2
 import com.youtubie.app.ui.intro.IntroFragment3
 import com.youtubie.app.util.PreferenceManager
-import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.view.View
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.youtubie.app.databinding.WelcomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,6 +35,16 @@ class WelcomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var preferenceManager: PreferenceManager
+
+    private val storagePermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            Toast.makeText(this, "Storage permission helps with downloading files.", Toast.LENGTH_SHORT).show()
+        }
+        // Proceed to main app regardless
+        navigateToMainPage()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,13 +71,29 @@ class WelcomeActivity : AppCompatActivity() {
         binding.textviewButton.setOnClickListener {
             if (current == 2.0) {
                 preferenceManager.setFirstLaunch(false)
-                intentObj.setClass(applicationContext, MainpageActivity::class.java)
-                startActivity(intentObj)
-                finish()
+                requestStoragePermissionAndNavigate()
             } else {
                 binding.viewpager1.currentItem = (current + 1).toInt()
             }
         }
+    }
+
+    private fun requestStoragePermissionAndNavigate() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            if (ContextCompat.checkSelfPermission(this, permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                storagePermissionLauncher.launch(permission)
+                return
+            }
+        }
+        // Already granted or not needed (API 29+)
+        navigateToMainPage()
+    }
+
+    private fun navigateToMainPage() {
+        intentObj.setClass(applicationContext, MainpageActivity::class.java)
+        startActivity(intentObj)
+        finish()
     }
 
     private fun updateIndicators(position: Int) {
@@ -120,3 +148,4 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 }
+

@@ -54,9 +54,7 @@
 						android:layout_marginLeft="5dp"
 						android:layout_marginRight="5dp"
 						android:src="@drawable/ic_brightness_1_black"
-						android:scaleType="fitXY"
-						android:scaleX="1.2"
-						android:scaleY="1.2" />
+						android:scaleType="fitXY" />
 					<ImageView
 						android:id="@+id/imageview2"
 						android:layout_width="15dp"
@@ -83,7 +81,10 @@
 					android:padding="8dp"
 					android:gravity="center_horizontal|center_vertical"
 					android:orientation="horizontal"
-					android:layout_gravity="center_horizontal|center_vertical">
+					android:layout_gravity="center_horizontal|center_vertical"
+					android:clickable="true"
+					android:focusable="true"
+					android:foreground="?attr/selectableItemBackground">
 					<TextView
 						android:id="@+id/textviewButton"
 						android:layout_width="wrap_content"

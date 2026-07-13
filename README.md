@@ -4,27 +4,19 @@
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Android-brightgreen.svg)
 
-Modern YouTube discovery and playback experience for Android - built with Kotlin, Retrofit, and Dagger Hilt.
+Modern YouTube discovery and high-performance download experience for Android - built with Kotlin, Retrofit, and Dagger Hilt.
 
 YouTubie is a sleek video discovery prototype built to demonstrate a modern Android development stack. It provides a seamless interface for searching, viewing, and managing video content, leveraging high-performance networking and efficient image loading.
 
-This is not an official YouTube client - it is a self-contained demo of a modular Android architecture using the RapidAPI YouTube data source.
-
-## Features
+## Key Features
 *   **🔍 High-speed video search** - find content instantly via RapidAPI integration.
-*   **📺 Seamless playback** - integrated video player with Material Design controls.
+*   **🚀 Multi-threaded Downloading** - 4-thread parallel downloading for audio and video files.
 *   **🖼️ Glide image caching** - smooth, flicker-free thumbnail loading and memory management.
 *   **🏗️ Hilt Dependency Injection** - robust, testable, and scalable architecture.
-*   ** ⚡ Coroutines & Flow** - modern asynchronous programming for a responsive UI.
-*   **🎨 Material Design 3** - follows the latest Android design guidelines.
-*   **⚙️ WorkManager integration** - reliable background task processing.
-
-## Screenshots
-*   Home Dashboard
-*   Video Search Results
-*   Playback Interface
-
-For a full walkthrough of all interface screens, workflows, and dialogs, see the `SCREENSHOTS.md` tour.
+*   **⚡ Coroutines & Flow** - modern asynchronous programming for a responsive UI.
+*   **🎨 Consistent Design System** - Unified card-based design across search and history.
+*   **⚙️ WorkManager integration** - reliable background task processing for parallel transfers.
+*   **✨ Immersive Experience** - Full-screen splash screen and smooth fade transitions.
 
 ## Quick Start
 
@@ -59,23 +51,23 @@ Or use the **Run** button in Android Studio on a device with API level 23+.
 youtubie/
 ├── app/
 │   ├── src/main/java/com/youtubie/app/
-│   │   ├── data/        # Repository and Remote Data Source (Retrofit)
+│   │   ├── data/        # Repository, Remote API, and Parallel Download Logic
 │   │   ├── di/          # Hilt Modules (Network, Repository)
 │   │   ├── ui/          # ViewModels, Fragments, and Activities
-│   │   └── util/        # Preferences and UI helpers
+│   │   └── util/        # Preferences, Storage, and UI helpers
 │   └── src/main/res/    # Material 3 resources, layouts, and animations
 ```
 
 ### Technical Interface
 | Component | Implementation |
 | :--- | :--- |
-| **Networking** | Retrofit 2 + OkHttp 4 |
+| **Networking** | Retrofit 3 + OkHttp 5 |
 | **Dependency Injection** | Dagger Hilt |
-| **Image Loading** | Glide |
+| **Image Loading** | Glide 5 |
 | **Concurrency** | Kotlin Coroutines + Flow |
 | **UI Framework** | Jetpack (ViewBinding, LiveData, ViewModel) |
 | **JSON Parsing** | GSON |
-| **Background Tasks** | WorkManager |
+| **Background Tasks** | WorkManager (Parallel Chunks) |
 
 ## Security and Configuration
 *   **API Key Protection**: The `RAPID_API_KEY` is injected via `BuildConfig` and sourced from `local.properties`, ensuring secrets are never committed to version control.
