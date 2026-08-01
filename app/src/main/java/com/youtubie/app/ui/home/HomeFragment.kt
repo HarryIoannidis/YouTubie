@@ -27,6 +27,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+/**
+ * Main search and download screen.
+ *
+ * The fragment resolves YouTube metadata, lets the user choose audio/video/image downloads,
+ * manages runtime permissions, and observes WorkManager progress.
+ */
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
@@ -34,6 +40,9 @@ class HomeFragment : Fragment() {
     
     @Inject
     lateinit var repository: YoutubeRepository
+
+    @Inject
+    lateinit var preferenceManager: com.youtubie.app.util.PreferenceManager
 
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +56,12 @@ class HomeFragment : Fragment() {
     private var pendingDownloadMetadata: VideoInfoResponse? = null
     private var pendingDownloadUrl: String? = null
     private var pendingDownloadFormatType: String? = null
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        // Continue flow regardless of notification permission result
+    }
 
     private val storagePermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -82,6 +97,9 @@ class HomeFragment : Fragment() {
         observeState()
     }
 
+    /**
+     * Initializes static styling and click listeners for searching, result actions, and dialogs.
+     */
     private fun setupUI() {
         binding.progressbarAudio.visibility = View.GONE
         binding.progressbarVideo.visibility = View.GONE
@@ -105,32 +123,24 @@ class HomeFragment : Fragment() {
 
         binding.linearSearch.isClickable = true
         binding.linearSearch.setOnClickListener {
-            hideKeyboard()
             val url = binding.searchEditText.text.toString()
-            if (url.isNotEmpty()) {
-                viewModel.fetchVideoMetadata(url)
-            } else {
-                Toast.makeText(requireContext(), "Please enter a URL", Toast.LENGTH_SHORT).show()
-            }
+            performSearch(url)
         }
 
         binding.imageClear.setOnClickListener {
-            binding.searchEditText.setText("")
+            showSearchHistoryBottomSheet()
         }
 
         binding.searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
-                hideKeyboard()
                 val url = binding.searchEditText.text.toString()
-                if (url.isNotEmpty()) {
-                    viewModel.fetchVideoMetadata(url)
-                }
+                performSearch(url)
                 true
             } else {
                 false
             }
         }
-        
+
         binding.linearSearchAgain.setOnClickListener {
             binding.linearResult.fadeOut {
                 binding.linearForSearch.fadeIn()
@@ -140,11 +150,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.linearRefresh.setOnClickListener {
-            hideKeyboard()
             val url = binding.searchEditText.text.toString()
-            if (url.isNotEmpty()) {
-                viewModel.fetchVideoMetadata(url)
-            }
+            performSearch(url)
         }
 
         binding.textviewTips.setOnClickListener {
@@ -208,11 +215,20 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Hides the soft keyboard after the user submits a search.
+     */
     private fun hideKeyboard() {
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.searchEditText.windowToken, 0)
     }
 
+    /**
+     * Selects the best available audio URL from adaptive formats, falling back to progressive formats.
+     *
+     * @param metadata API metadata response containing media formats.
+     * @return direct audio URL when available, otherwise a progressive fallback URL, or null.
+     */
     private fun audioFormatUrl(metadata: VideoInfoResponse): String? {
         val adaptiveAudio = metadata.adaptiveFormats?.filter {
             it.mimeType?.contains("audio") == true
@@ -228,6 +244,12 @@ class HomeFragment : Fragment() {
         return metadata.formats?.firstOrNull()?.url
     }
 
+    /**
+     * Selects the highest labeled progressive video URL available in the metadata.
+     *
+     * @param metadata API metadata response containing media formats.
+     * @return direct video URL, first available fallback URL, or null when no format has a URL.
+     */
     private fun videoFormatUrl(metadata: VideoInfoResponse): String? {
         val progressiveVideo = metadata.formats?.maxByOrNull {
             when (it.qualityLabel) {
@@ -243,6 +265,15 @@ class HomeFragment : Fragment() {
         return progressiveVideo?.url ?: metadata.formats?.firstOrNull()?.url
     }
 
+    /**
+     * Applies a solid rounded rectangle background with a border.
+     *
+     * @param view target view to style.
+     * @param color1 fill color.
+     * @param border border width in pixels.
+     * @param color2 border color.
+     * @param round corner radius in pixels.
+     */
     private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
         val gd = android.graphics.drawable.GradientDrawable()
         gd.setColor(android.graphics.Color.parseColor(color1))
@@ -251,20 +282,52 @@ class HomeFragment : Fragment() {
         view.background = gd
     }
 
+    /**
+     * Applies a rounded background with ripple feedback and outline clipping.
+     *
+     * @param view target view to style.
+     * @param focus background color used at rest.
+     * @param pressed ripple color used during touch feedback.
+     * @param round corner radius in pixels.
+     * @param stroke border width in pixels.
+     * @param strokeclr border color, with or without a leading #.
+     */
     private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
         val GG = android.graphics.drawable.GradientDrawable()
         GG.setColor(android.graphics.Color.parseColor(focus))
         GG.cornerRadius = round.toFloat()
         GG.setStroke(stroke.toInt(), android.graphics.Color.parseColor("#" + strokeclr.replace("#", "")))
+        val mask = android.graphics.drawable.GradientDrawable()
+        mask.setColor(android.graphics.Color.WHITE)
+        mask.cornerRadius = round.toFloat()
         val RE = android.graphics.drawable.RippleDrawable(
             android.content.res.ColorStateList(arrayOf(intArrayOf()), intArrayOf(android.graphics.Color.parseColor(pressed))),
             GG,
-            null
+            mask
         )
         view.background = RE
+        view.outlineProvider = object : android.view.ViewOutlineProvider() {
+            override fun getOutline(v: View, outline: android.graphics.Outline) {
+                outline.setRoundRect(0, 0, v.width, v.height, round.toFloat())
+            }
+        }
+        view.clipToOutline = true
     }
 
+    /**
+     * Requests any needed runtime permissions before starting a download.
+     *
+     * @param metadata video metadata used to name and record the download.
+     * @param url direct URL to download.
+     * @param formatType asset type requested by the user, such as Audio, Video, or Image.
+     */
     private fun checkStoragePermissionAndStart(metadata: VideoInfoResponse, url: String, formatType: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permission = android.Manifest.permission.POST_NOTIFICATIONS
+            if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                notificationPermissionLauncher.launch(permission)
+            }
+        }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -279,6 +342,13 @@ class HomeFragment : Fragment() {
         performStartDownload(metadata, url, formatType)
     }
 
+    /**
+     * Builds and enqueues the WorkManager request that performs a download.
+     *
+     * @param metadata video metadata saved into the worker input data.
+     * @param url direct media or image URL to download.
+     * @param formatType asset type requested by the user, such as Audio, Video, or Image.
+     */
     private fun performStartDownload(metadata: VideoInfoResponse, url: String, formatType: String) {
         val extension = when (formatType) {
             "Audio" -> ".mp3"
@@ -300,7 +370,14 @@ class HomeFragment : Fragment() {
             "videoId" to (metadata.id ?: ""),
             "title" to title,
             "channelTitle" to (metadata.channelTitle ?: "Unknown"),
-            "thumbnailUrl" to (metadata.thumbnails?.lastOrNull()?.url ?: ""),
+            "thumbnailUrl" to run {
+                val rawUrl = metadata.thumbnails?.lastOrNull()?.url ?: ""
+                if (rawUrl.contains("ytimg.com")) {
+                    rawUrl.replace("/sddefault.", "/mqdefault.")
+                        .replace("/hqdefault.", "/mqdefault.")
+                        .replace("/default.", "/mqdefault.")
+                } else rawUrl
+            },
             "formatType" to formatType,
             "viewCount" to (metadata.viewCount ?: "0"),
             "duration" to formatDuration(metadata.durationSeconds, metadata.durationText)
@@ -318,6 +395,12 @@ class HomeFragment : Fragment() {
         showDownloadProgressDialog(workRequest.id, title)
     }
 
+    /**
+     * Fetches fresh download URLs when the metadata response does not contain a usable URL.
+     *
+     * @param videoId YouTube video identifier.
+     * @param formatType asset type requested by the user, such as Audio or Video.
+     */
     private fun fetchAndStartDownload(videoId: String, formatType: String) {
         if (formatType == "Audio") {
             binding.progressbarAudio.visibility = View.VISIBLE
@@ -328,39 +411,53 @@ class HomeFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            repository.getDownloadUrl(videoId).onSuccess { downloadResponse ->
-                if (formatType == "Audio") {
-                    binding.progressbarAudio.visibility = View.GONE
-                    binding.linearAudio.isEnabled = true
-                    val audioUrl = audioFormatUrl(downloadResponse)
-                    if (audioUrl != null) {
-                        checkStoragePermissionAndStart(downloadResponse, audioUrl, "Audio")
-                    } else {
-                        Toast.makeText(requireContext(), "No audio format available", Toast.LENGTH_SHORT).show()
+            var validUrl: String? = null
+            var lastResponse: VideoInfoResponse? = null
+            var lastErrorMessage: String? = null
+
+            // Try up to 2 attempts
+            for (attempt in 1..2) {
+                val result = repository.getDownloadUrl(videoId)
+                if (result.isSuccess) {
+                    val response = result.getOrNull()
+                    if (response != null) {
+                        lastResponse = response
+                        val url = if (formatType == "Audio") audioFormatUrl(response) else videoFormatUrl(response)
+                        if (url != null) {
+                            validUrl = url
+                            break // Success!
+                        }
                     }
                 } else {
-                    binding.progressbarVideo.visibility = View.GONE
-                    binding.linearVideo.isEnabled = true
-                    val videoUrl = videoFormatUrl(downloadResponse)
-                    if (videoUrl != null) {
-                        checkStoragePermissionAndStart(downloadResponse, videoUrl, "Video")
-                    } else {
-                        Toast.makeText(requireContext(), "No video format available", Toast.LENGTH_SHORT).show()
-                    }
+                    lastErrorMessage = result.exceptionOrNull()?.message
                 }
-            }.onFailure { error ->
-                if (formatType == "Audio") {
-                    binding.progressbarAudio.visibility = View.GONE
-                    binding.linearAudio.isEnabled = true
-                } else {
-                    binding.progressbarVideo.visibility = View.GONE
-                    binding.linearVideo.isEnabled = true
+
+                // If first attempt failed to return valid URL, wait briefly before retrying
+                if (attempt == 1) {
+                    kotlinx.coroutines.delay(500)
                 }
-                Toast.makeText(requireContext(), "Failed to get download URL: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+
+            if (formatType == "Audio") {
+                binding.progressbarAudio.visibility = View.GONE
+                binding.linearAudio.isEnabled = true
+            } else {
+                binding.progressbarVideo.visibility = View.GONE
+                binding.linearVideo.isEnabled = true
+            }
+
+            if (validUrl != null && lastResponse != null) {
+                checkStoragePermissionAndStart(lastResponse, validUrl, formatType)
+            } else {
+                val errorMsg = lastErrorMessage ?: "Unable to obtain a valid $formatType download link after 2 attempts."
+                Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    /**
+     * Displays the static tips dialog.
+     */
     private fun showTipsDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_tips, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -373,6 +470,9 @@ class HomeFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * Displays the static instructions dialog.
+     */
     private fun showInstructionsDialog() {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_instructions, null)
         val dialog = androidx.appcompat.app.AlertDialog.Builder(requireContext())
@@ -385,6 +485,12 @@ class HomeFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * Shows a modal progress dialog for an active WorkManager download.
+     *
+     * @param workId ID of the enqueued download work.
+     * @param title video title displayed in the progress dialog.
+     */
     private fun showDownloadProgressDialog(workId: java.util.UUID, title: String) {
         isDownloadToastShown = false
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_download, null)
@@ -443,6 +549,9 @@ class HomeFragment : Fragment() {
         dialog.show()
     }
 
+    /**
+     * Observes [HomeUiState] and renders loading, success, and error states.
+     */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -467,6 +576,10 @@ class HomeFragment : Fragment() {
                             // Fade out search, fade in result
                             binding.linearForSearch.fadeOut {
                                 val metadata = state.metadata
+                                val searchedUrl = binding.searchEditText.text.toString().trim()
+                                if (searchedUrl.isNotEmpty() && !metadata.title.isNullOrEmpty()) {
+                                    preferenceManager.updateSearchTitle(searchedUrl, metadata.title)
+                                }
                                 binding.textviewTitle.text = metadata.title ?: "No Title"
                                 binding.textviewChannel.text = metadata.channelTitle ?: "Unknown Channel"
                                 binding.textviewViews.text = metadata.viewCount ?: "0"
@@ -496,6 +609,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    /**
+     * Formats a duration from either preformatted text or a raw seconds value.
+     *
+     * @param secondsStr duration in seconds as returned by the API.
+     * @param text preformatted duration text returned by the API.
+     * @return preformatted text when present, otherwise an m:ss or h:mm:ss string.
+     */
     private fun formatDuration(secondsStr: String?, text: String?): String {
         if (!text.isNullOrEmpty()) return text
         val seconds = secondsStr?.toLongOrNull() ?: 0L
@@ -515,15 +635,124 @@ class HomeFragment : Fragment() {
     }
 
     // Fade animation utilities
+    /**
+     * Fades a view from transparent to visible.
+     *
+     * @param duration animation duration in milliseconds.
+     */
     private fun View.fadeIn(duration: Long = 150) {
         alpha = 0f
         visibility = View.VISIBLE
         animate().alpha(1f).setDuration(duration).start()
     }
 
+    /**
+     * Fades a view out and hides it after the animation finishes.
+     *
+     * @param duration animation duration in milliseconds.
+     * @param onEnd callback invoked after the view is hidden.
+     */
     private fun View.fadeOut(duration: Long = 150, onEnd: () -> Unit = {}) {
         animate().alpha(0f).setDuration(duration)
             .withEndAction { visibility = View.GONE; onEnd() }
             .start()
+    }
+
+    /**
+     * Validates and submits a search URL, saving it to recent searches first.
+     *
+     * @param url raw text entered by the user.
+     */
+    private fun performSearch(url: String) {
+        hideKeyboard()
+        val trimmed = url.trim()
+        if (trimmed.isNotEmpty()) {
+            preferenceManager.addSearchQuery(trimmed)
+            viewModel.fetchVideoMetadata(trimmed)
+        } else {
+            Toast.makeText(requireContext(), "Please enter a URL", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Displays saved search history and lets the user rerun or clear previous searches.
+     */
+    private fun showSearchHistoryBottomSheet() {
+        val searchHistory = preferenceManager.getSearchHistory()
+
+        val bottomSheetDialog = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
+        val bottomSheetView = layoutInflater.inflate(R.layout.dialog_search_history, null)
+        bottomSheetDialog.setContentView(bottomSheetView)
+
+        val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
+        _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
+
+        val listview = bottomSheetView.findViewById<ListView>(R.id.listviewSearchHistory)
+        val textviewEmpty = bottomSheetView.findViewById<TextView>(R.id.textviewEmpty)
+        val imageClearHistory = bottomSheetView.findViewById<ImageView>(R.id.imageClearHistory)
+        val imageClose = bottomSheetView.findViewById<ImageView>(R.id.imageClose)
+
+        // Limit maximum height to half the screen height
+        val maxScreenHeight = resources.displayMetrics.heightPixels / 2
+        val bottomSheetInternal = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+        bottomSheetInternal?.setBackgroundResource(android.R.color.transparent)
+
+        bottomSheetDialog.setOnShowListener {
+            val bottomSheet = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            if (bottomSheet != null) {
+                val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(bottomSheet)
+                behavior.maxHeight = maxScreenHeight
+                behavior.peekHeight = maxScreenHeight
+                behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
+            }
+        }
+
+        if (searchHistory.isEmpty()) {
+            listview.visibility = View.GONE
+            textviewEmpty.visibility = View.VISIBLE
+        } else {
+            listview.visibility = View.VISIBLE
+            textviewEmpty.visibility = View.GONE
+
+            val adapter = object : ArrayAdapter<com.youtubie.app.data.model.SearchHistoryItem>(requireContext(), R.layout.item_search_history, searchHistory) {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                    val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_search_history, parent, false)
+                    val item = getItem(position)
+                    val tvQuery = view.findViewById<TextView>(R.id.textviewQuery)
+                    val tvTitle = view.findViewById<TextView>(R.id.textviewTitle)
+
+                    if (item != null) {
+                        tvQuery.text = item.query
+                        if (!item.title.isNullOrEmpty()) {
+                            tvTitle.text = item.title
+                            tvTitle.visibility = View.VISIBLE
+                        } else {
+                            tvTitle.visibility = View.GONE
+                        }
+                    }
+                    return view
+                }
+            }
+            listview.adapter = adapter
+
+            listview.setOnItemClickListener { _, _, position, _ ->
+                val selectedItem = searchHistory[position]
+                binding.searchEditText.setText(selectedItem.query)
+                bottomSheetDialog.dismiss()
+                performSearch(selectedItem.query)
+            }
+        }
+
+        imageClearHistory.setOnClickListener {
+            preferenceManager.clearSearchHistory()
+            bottomSheetDialog.dismiss()
+            Toast.makeText(requireContext(), "Search history cleared", Toast.LENGTH_SHORT).show()
+        }
+
+        imageClose.setOnClickListener {
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
     }
 }

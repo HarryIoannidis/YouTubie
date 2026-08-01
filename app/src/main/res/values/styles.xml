@@ -4,6 +4,8 @@
 parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:fontFamily">@font/poppins</item>
         <item name="android:windowAnimationStyle">@style/FadeWindowAnimation</item>
+        <item name="android:scrollbarSize">3dp</item>
+        <item name="android:scrollbarThumbVertical">@drawable/slim_scrollbar_thumb</item>
 </style>
 
 <style name="FadeWindowAnimation" parent="@android:style/Animation.Activity">

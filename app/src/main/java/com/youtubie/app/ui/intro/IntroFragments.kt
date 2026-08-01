@@ -12,6 +12,9 @@ import com.youtubie.app.databinding.Fragment3FragmentBinding
 import com.youtubie.app.databinding.FragmentAboutInstructionsBinding
 import com.youtubie.app.databinding.FragmentAboutTipsBinding
 
+/**
+ * First onboarding page shown during the initial launch flow.
+ */
 class IntroFragment1 : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = Fragment1FragmentBinding.inflate(inflater, container, false)
@@ -19,6 +22,9 @@ class IntroFragment1 : Fragment() {
     }
 }
 
+/**
+ * Second onboarding page shown during the initial launch flow.
+ */
 class IntroFragment2 : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = Fragment2FragmentBinding.inflate(inflater, container, false)
@@ -26,6 +32,9 @@ class IntroFragment2 : Fragment() {
     }
 }
 
+/**
+ * Third onboarding page reused by onboarding and the about screen.
+ */
 class IntroFragment3 : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = Fragment3FragmentBinding.inflate(inflater, container, false)
@@ -33,6 +42,9 @@ class IntroFragment3 : Fragment() {
     }
 }
 
+/**
+ * Static instructions page shown from the about screen.
+ */
 class AboutInstructionsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentAboutInstructionsBinding.inflate(inflater, container, false)
@@ -40,6 +52,9 @@ class AboutInstructionsFragment : Fragment() {
     }
 }
 
+/**
+ * Static tips page shown from the about screen.
+ */
 class AboutTipsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentAboutTipsBinding.inflate(inflater, container, false)

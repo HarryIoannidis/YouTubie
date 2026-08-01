@@ -116,7 +116,7 @@
 							android:layout_height="30dp"
 							android:layout_marginRight="10dp"
 							android:padding="5dp"
-							android:src="@drawable/ic_clear_black"
+							android:src="@drawable/ic_history_black"
 							android:scaleType="fitXY"
 							android:background="?attr/selectableItemBackgroundBorderless"
 							android:layout_gravity="center_horizontal|center_vertical" />
@@ -212,10 +212,11 @@
 						<ImageView
 							android:id="@+id/thumbnail"
 							android:layout_width="match_parent"
-							android:layout_height="205dp"
+							android:layout_height="wrap_content"
+							android:adjustViewBounds="true"
 							android:background="@android:color/transparent"
 							android:src="@drawable/youtube_thumbnail"
-							android:scaleType="fitXY" />
+							android:scaleType="fitCenter" />
 					</androidx.cardview.widget.CardView>
 					<LinearLayout
 						android:id="@+id/linearInfo"

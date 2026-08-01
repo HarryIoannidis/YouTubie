@@ -24,6 +24,9 @@ import com.youtubie.app.databinding.WelcomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ * First-launch onboarding activity that advances through intro pages before opening the app.
+ */
 @AndroidEntryPoint
 class WelcomeActivity : AppCompatActivity() {
 
@@ -54,6 +57,9 @@ class WelcomeActivity : AppCompatActivity() {
         initializeLogic()
     }
 
+    /**
+     * Wires the onboarding ViewPager, page indicators, and next/get-started action.
+     */
     private fun initialize() {
         vibr = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         fragAdapter = FragFragmentAdapter(this, supportFragmentManager)
@@ -78,6 +84,9 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Requests legacy external-storage permission when needed, then continues into the main screen.
+     */
     private fun requestStoragePermissionAndNavigate() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -90,12 +99,20 @@ class WelcomeActivity : AppCompatActivity() {
         navigateToMainPage()
     }
 
+    /**
+     * Opens [MainpageActivity] and closes onboarding.
+     */
     private fun navigateToMainPage() {
         intentObj.setClass(applicationContext, MainpageActivity::class.java)
         startActivity(intentObj)
         finish()
     }
 
+    /**
+     * Updates page indicator icons and the action-button label for the current onboarding page.
+     *
+     * @param position zero-based onboarding page index.
+     */
     private fun updateIndicators(position: Int) {
         binding.imageview1.setImageResource(if (position == 0) R.drawable.ic_brightness_1_black else R.drawable.ic_panorama_fisheye_black)
         binding.imageview2.setImageResource(if (position == 1) R.drawable.ic_brightness_1_black else R.drawable.ic_panorama_fisheye_black)
@@ -104,12 +121,33 @@ class WelcomeActivity : AppCompatActivity() {
         binding.textviewButton.text = if (position == 2) "Get Started" else "Next"
     }
 
+    /**
+     * Applies the ViewPager page-transform animation.
+     */
     private fun initializeLogic() {
         binding.viewpager1.setPageTransformer(true, ZoomOutPageTransformer())
     }
 
+    /**
+     * Supplies onboarding fragments to the legacy ViewPager.
+     *
+     * @param context host context retained for adapter construction.
+     * @param fm fragment manager used by [FragmentPagerAdapter].
+     */
     private inner class FragFragmentAdapter(context: Context, fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        /**
+         * Returns the number of onboarding pages.
+         *
+         * @return always 3.
+         */
         override fun getCount(): Int = 3
+
+        /**
+         * Creates the onboarding fragment for the requested page.
+         *
+         * @param position zero-based page index.
+         * @return matching intro fragment, or the first fragment for invalid positions.
+         */
         override fun getItem(position: Int): Fragment {
             return when (position) {
                 0 -> IntroFragment1()
@@ -120,10 +158,19 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Page transformer that scales and fades adjacent onboarding pages.
+     */
     private inner class ZoomOutPageTransformer : ViewPager.PageTransformer {
         private val MIN_SCALE = 0.85f
         private val MIN_ALPHA = 0.5f
 
+        /**
+         * Applies scale, translation, and alpha based on a page's position.
+         *
+         * @param view page view being transformed.
+         * @param position relative page offset where 0 is centered.
+         */
         override fun transformPage(view: View, position: Float) {
             val pageWidth = view.width
             val pageHeight = view.height

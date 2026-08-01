@@ -14,6 +14,9 @@ import com.youtubie.app.util.PreferenceManager
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ * Splash activity that routes first-time users to onboarding and returning users to the main screen.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

@@ -11,6 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the home screen search flow.
+ *
+ * @param repository repository used to resolve YouTube metadata.
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: YoutubeRepository
@@ -19,6 +24,11 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Idle)
     val uiState: StateFlow<HomeUiState> = _uiState
 
+    /**
+     * Parses a YouTube URL and fetches metadata for the extracted video ID.
+     *
+     * @param url raw YouTube URL entered by the user.
+     */
     fun fetchVideoMetadata(url: String) {
         val videoId = extractVideoId(url)
         if (videoId == null) {
@@ -36,6 +46,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Extracts a video ID from supported YouTube URL shapes.
+     *
+     * @param url raw YouTube URL entered by the user.
+     * @return video ID when the URL contains a supported pattern, otherwise null.
+     */
     private fun extractVideoId(url: String): String? {
         // Basic extractor for now, can be improved
         return if (url.contains("v=")) {
@@ -48,9 +64,31 @@ class HomeViewModel @Inject constructor(
     }
 }
 
+/**
+ * UI state emitted by [HomeViewModel] and rendered by the home screen.
+ */
 sealed class HomeUiState {
+    /**
+     * No request is active and no result is displayed.
+     */
     object Idle : HomeUiState()
+
+    /**
+     * Metadata request is in progress.
+     */
     object Loading : HomeUiState()
+
+    /**
+     * Metadata request completed successfully.
+     *
+     * @property metadata video metadata returned by the repository.
+     */
     data class Success(val metadata: VideoInfoResponse) : HomeUiState()
+
+    /**
+     * Metadata request failed or the submitted URL was invalid.
+     *
+     * @property message user-visible error text.
+     */
     data class Error(val message: String) : HomeUiState()
 }
