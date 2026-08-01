@@ -50,7 +50,6 @@ android {
             res.srcDirs = [
                 'src/main/res',
                 'src/main/res-xml',
-                'src/main/res-xml/shapes',
                 'src/main/res-img'
             ]
         }

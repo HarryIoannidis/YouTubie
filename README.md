@@ -13,7 +13,7 @@
 ### 1. High-Performance Speed
 *   **Multi-threaded Engine**: Utilizes a custom 4-thread parallel download system with automatic chunk merging.
 *   **Range-Based Fetching**: Implements HTTP Range headers to maximize bandwidth usage during audio and video downloads.
-*   **Optimized Throughput**: Features a large 128KB data buffer for smooth, high-speed transfers on modern networks.
+*   **Optimized Throughput**: Features a large 256KB data buffer for smooth, high-speed transfers on modern networks.
 
 ### 2. Modern Design System
 *   **Unified UI**: A cohesive card-based design language shared between Search Results and Download History.
