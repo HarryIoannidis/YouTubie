@@ -1,5 +1,4 @@
 package com.youtubie.app.ui.home
-import com.youtubie.app.R
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +17,10 @@ import com.youtubie.app.ui.viewmodel.HomeUiState
 import com.youtubie.app.ui.viewmodel.HomeViewModel
 import com.youtubie.app.data.repository.YoutubeRepository
 import com.youtubie.app.data.model.VideoInfoResponse
+import com.youtubie.app.data.model.VideoFormat
+import com.youtubie.app.data.model.AdaptiveVideoFormat
 import com.youtubie.app.data.download.DownloadWorker
+import com.youtubie.app.R
 import android.os.Build
 import android.view.inputmethod.InputMethodManager
 import android.content.Context
@@ -543,7 +545,7 @@ class HomeFragment : Fragment() {
             activeDownloadTitle = null
             workManager.cancelWorkById(workId)
             dialog.dismiss()
-            Toast.makeText(requireContext(), "Download cancelled", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.download_cancelled), Toast.LENGTH_SHORT).show()
         }
 
         dialog.show()

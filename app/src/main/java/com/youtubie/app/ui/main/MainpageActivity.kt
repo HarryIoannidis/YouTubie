@@ -1,9 +1,11 @@
 package com.youtubie.app.ui.main
 
-import com.youtubie.app.R
+import com.youtubie.app.ui.showApiKeyDialog
 import com.youtubie.app.ui.home.HomeFragment
 import com.youtubie.app.ui.history.HistoryFragment
 import com.youtubie.app.ui.about.AboutActivity
+import com.youtubie.app.util.PreferenceManager
+import com.youtubie.app.R
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -29,6 +31,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.youtubie.app.databinding.MainpageBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import java.util.*
 
 /**
@@ -37,8 +40,12 @@ import java.util.*
 @AndroidEntryPoint
 class MainpageActivity : AppCompatActivity() {
 
+
     private lateinit var binding: MainpageBinding
     private val intentObj = Intent()
+
+    @Inject
+    lateinit var preferenceManager: PreferenceManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,10 +83,10 @@ class MainpageActivity : AppCompatActivity() {
         val b2 = inflate.findViewById<TextView>(R.id.b2)
         val bg = inflate.findViewById<LinearLayout>(R.id.bg)
         
-        t1.text = "Leave?"
-        t2.text = "Are you sure you want to quit the app? Your current search will not be saved."
-        b1.text = "Stay"
-        b2.text = "Quit"
+        t1.text = getString(R.string.quit_dialog_title)
+        t2.text = getString(R.string.quit_dialog_desc)
+        b1.text = getString(R.string.action_stay)
+        b2.text = getString(R.string.action_quit)
         
         b1.setOnClickListener {
             dialog1.dismiss()
@@ -117,12 +124,14 @@ class MainpageActivity : AppCompatActivity() {
 
         val b1 = bottomSheetView.findViewById<TextView>(R.id.b1)
         val b2 = bottomSheetView.findViewById<TextView>(R.id.b2)
+        val b3 = bottomSheetView.findViewById<TextView>(R.id.b3)
         val i2 = bottomSheetView.findViewById<ImageView>(R.id.i2)
         val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
 
         _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
         _rippleRoundStroke(b1, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
         _rippleRoundStroke(b2, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
+        _rippleRoundStroke(b3, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
         _rippleRoundStroke(i2, "#FFFFFF", "#40000000", 90.0, 0.0, "#FFFFFF")
         
         i2.setImageResource(R.drawable.cross)
@@ -137,6 +146,13 @@ class MainpageActivity : AppCompatActivity() {
             bottomSheetDialog.dismiss()
             val githubIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/HarryIoannidis"))
             startActivity(githubIntent)
+        }
+
+        b3.setOnClickListener {
+            bottomSheetDialog.dismiss()
+            showApiKeyDialog(prefill = preferenceManager.getApiKey(), cancelable = true) { apiKey ->
+                preferenceManager.setApiKey(apiKey)
+            }
         }
         
         i2.setOnClickListener {
@@ -231,8 +247,8 @@ class MainpageActivity : AppCompatActivity() {
         binding.navig.itemIconSize = 36
         binding.fab.setImageResource(R.drawable.menu_burger)
         binding.navig.menu.clear()
-        binding.navig.menu.add(0, 0, 0, "Home").setIcon(R.drawable.home)
-        binding.navig.menu.add(0, 1, 0, "History").setIcon(R.drawable.time_past)
+        binding.navig.menu.add(0, 0, 0, getString(R.string.nav_home)).setIcon(R.drawable.home)
+        binding.navig.menu.add(0, 1, 0, getString(R.string.nav_history)).setIcon(R.drawable.time_past)
 
         val colorStateList = ColorStateList(
             arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked)),

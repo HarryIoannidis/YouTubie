@@ -14,7 +14,7 @@
 	<ImageView
 		android:layout_width="20dp"
 		android:layout_height="20dp"
-		android:src="@drawable/ic_access_time_black"
+		android:src="@drawable/ic_access_time"
 		android:scaleType="fitCenter"
 		android:alpha="0.5" />
 

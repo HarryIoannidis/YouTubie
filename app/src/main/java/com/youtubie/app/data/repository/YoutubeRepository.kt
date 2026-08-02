@@ -3,6 +3,7 @@ package com.youtubie.app.data.repository
 import com.youtubie.app.BuildConfig
 import com.youtubie.app.data.model.VideoInfoResponse
 import com.youtubie.app.data.remote.YoutubeApiService
+import com.youtubie.app.util.PreferenceManager
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +14,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class YoutubeRepository @Inject constructor(
-    private val apiService: YoutubeApiService
+    private val apiService: YoutubeApiService,
+    private val preferenceManager: PreferenceManager
 ) {
     /**
      * Resolves display metadata for a video.
@@ -23,11 +25,13 @@ class YoutubeRepository @Inject constructor(
      * the HTTP response is unsuccessful, or the request throws.
      */
     suspend fun getVideoMetadata(videoId: String): Result<VideoInfoResponse> {
-        if (BuildConfig.RAPID_API_KEY.isBlank()) {
-            return Result.failure(Exception("RAPID_API_KEY is not configured. Please add it to your local.properties file."))
+        val apiKey = preferenceManager.getApiKey()?.takeIf { it.isNotBlank() }
+            ?: BuildConfig.RAPID_API_KEY
+        if (apiKey.isBlank()) {
+            return Result.failure(Exception("RapidAPI key is not configured. Please enter one in the app."))
         }
         return try {
-            val response = apiService.getVideoInfo(videoId = videoId, apiKey = BuildConfig.RAPID_API_KEY)
+            val response = apiService.getVideoInfo(videoId = videoId, apiKey = apiKey)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {
@@ -47,11 +51,13 @@ class YoutubeRepository @Inject constructor(
      * the HTTP response is unsuccessful, or the request throws.
      */
     suspend fun getDownloadUrl(videoId: String): Result<VideoInfoResponse> {
-        if (BuildConfig.RAPID_API_KEY.isBlank()) {
-            return Result.failure(Exception("RAPID_API_KEY is not configured. Please add it to your local.properties file."))
+        val apiKey = preferenceManager.getApiKey()?.takeIf { it.isNotBlank() }
+            ?: BuildConfig.RAPID_API_KEY
+        if (apiKey.isBlank()) {
+            return Result.failure(Exception("RapidAPI key is not configured. Please enter one in the app."))
         }
         return try {
-            val response = apiService.getDownloadUrl(videoId = videoId, apiKey = BuildConfig.RAPID_API_KEY)
+            val response = apiService.getDownloadUrl(videoId = videoId, apiKey = apiKey)
             if (response.isSuccessful && response.body() != null) {
                 Result.success(response.body()!!)
             } else {

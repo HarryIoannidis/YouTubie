@@ -80,7 +80,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="5dp"
 		android:layout_gravity="center_horizontal|bottom"
-		app:srcCompat="@drawable/ic_menu_black"
+		app:srcCompat="@drawable/menu_burger"
 		android:translationY="-18.0dp"
 		android:scaleX="1.1"
 		android:scaleY="1.1" />

@@ -25,8 +25,8 @@ data class VideoInfoResponse(
     @SerializedName("lengthSeconds") val durationSeconds: String?,
     @SerializedName("lengthText") val durationText: String?,
     @SerializedName("description") val description: String?,
-    @SerializedName("formats") val formats: List<Format>?,
-    @SerializedName("adaptiveFormats") val adaptiveFormats: List<AdaptiveFormat>?
+    @SerializedName("formats") val formats: List<VideoFormat>?,
+    @SerializedName("adaptiveFormats") val adaptiveFormats: List<AdaptiveVideoFormat>?
 )
 
 /**
@@ -51,7 +51,7 @@ data class Thumbnail(
  * @property qualityLabel human-readable video quality such as 720p.
  * @property contentLength optional stream size in bytes as a string.
  */
-data class Format(
+data class VideoFormat(
     @SerializedName("itag") val itag: Int?,
     @SerializedName("url") val url: String?,
     @SerializedName("mimeType") val mimeType: String?,
@@ -69,7 +69,7 @@ data class Format(
  * @property audioQuality audio quality label for audio streams.
  * @property contentLength optional stream size in bytes as a string.
  */
-data class AdaptiveFormat(
+data class AdaptiveVideoFormat(
     @SerializedName("itag") val itag: Int?,
     @SerializedName("url") val url: String?,
     @SerializedName("mimeType") val mimeType: String?,

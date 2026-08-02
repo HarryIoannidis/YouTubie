@@ -53,15 +53,20 @@ The core of YouTubie's performance lies in its `DownloadWorker`. Instead of stan
 ### Prerequisites
 *   Android Studio Koala or newer.
 *   Android SDK 37.
-*   A valid [RapidAPI](https://rapidapi.com/) account with the YouTube Data API enabled.
+*   A valid [RapidAPI](https://rapidapi.com/) account with the [YT-API](https://rapidapi.com/ytjar/api/yt-api) enabled.
 
 ### 1. Configure API Keys
-The app requires a `RAPID_API_KEY` to function.
+The app requires a `RAPID_API_KEY` to function. There are two ways to provide it:
+
+**For developers (building from source):**
 1. Create a `local.properties` file in your root directory.
 2. Add your key:
 ```properties
 RAPID_API_KEY=your_actual_rapidapi_key_here
 ```
+
+**For APK users:**
+On first launch, the app will prompt you to enter your RapidAPI key via a setup dialog. You can obtain a key from the [YT-API page on RapidAPI](https://rapidapi.com/ytjar/api/yt-api). You can change your API key at any time from the FAB menu → "Change API Key".
 
 ### 2. Build and Run
 Open the project in Android Studio, sync with Gradle, and deploy to a device with API level 23+.
@@ -78,10 +83,15 @@ youtubie/
 │   ├── src/main/java/com/youtubie/app/
 │   │   ├── data/        # Repository, API Services, and Parallel Download Engine
 │   │   ├── di/          # Hilt Dependency Injection Modules
-│   │   ├── ui/          # ViewModels, Fragments, and Polished Activities
+│   │   ├── ui/          # ViewModels, Fragments, Activities, and API Key Dialog
 │   │   └── util/        # Preference Management, Storage Utils, and UI Helpers
-│   └── src/main/res/    # Material 3 resources, Layouts, and Immersive Animations
+│   └── src/main/res/    # Material vector drawables, Layouts, and Immersive Animations
 ```
+
+---
+
+## ⚠️ Disclaimer
+This is a portfolio project created for educational and demonstration purposes. Please respect all digital licenses, copyrights, and terms of service when using this application.
 
 ---
 

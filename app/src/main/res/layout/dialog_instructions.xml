@@ -19,7 +19,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="10dp"
-			android:text="Instructions for searching and downloading."
+			android:text="@string/instructions_title"
 			android:textSize="16sp"
 			android:textStyle="bold"
 			android:textColor="#000000" />
@@ -47,7 +47,7 @@
 				android:paddingTop="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"
-				android:text="Paste the link you copied in the field and then press the &quot;Search&quot; button. Be aware that only YouTube videos can be searched containing the &quot;youtu.be&quot; or &quot;youtube.com&quot; and not YouTube shorts."
+				android:text="@string/instruction_step_1"
 				android:textSize="14sp"
 				android:textColor="#757575" />
 		</LinearLayout>
@@ -75,7 +75,7 @@
 				android:paddingTop="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"
-				android:text="While searching, do not close the application nor the internet connection. Once the search is successful, you can view the video's data on your screen."
+				android:text="@string/instruction_step_2"
 				android:textSize="14sp"
 				android:textColor="#757575" />
 		</LinearLayout>
@@ -103,7 +103,7 @@
 				android:paddingTop="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"
-				android:text="Click the &quot;Audio&quot; or &quot;Video&quot; button to download the video in your preferred format in HD quality."
+				android:text="@string/instruction_step_3"
 				android:textSize="14sp"
 				android:textColor="#757575" />
 		</LinearLayout>
@@ -131,7 +131,7 @@
 				android:paddingTop="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"
-				android:text="After downloading anything, it will show in the download history screen. Swipe left from the homepage to view the history."
+				android:text="@string/instruction_step_4"
 				android:textSize="14sp"
 				android:textColor="#757575" />
 		</LinearLayout>
@@ -159,7 +159,7 @@
 				android:paddingTop="8dp"
 				android:paddingRight="8dp"
 				android:paddingBottom="8dp"
-				android:text="Click the &quot;Search another video&quot; button to clear your current search and start again. Your current search will not be saved."
+				android:text="@string/instruction_step_5"
 				android:textSize="14sp"
 				android:textColor="#757575" />
 		</LinearLayout>

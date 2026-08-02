@@ -52,7 +52,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="3dp"
-					android:text="YouTubiee"
+					android:text="@string/app_name"
 					android:textSize="14sp"
 					android:textColor="#212121" />
 			</LinearLayout>
@@ -70,7 +70,7 @@
 					android:layout_width="35dp"
 					android:layout_height="35dp"
 					android:padding="10dp"
-					android:src="@drawable/ic_clear_black"
+					android:src="@drawable/ic_close"
 					android:scaleType="fitXY" />
 			</LinearLayout>
 		</LinearLayout>
@@ -81,7 +81,7 @@
 			android:layout_height="wrap_content"
 			android:padding="12dp"
 			android:gravity="center_horizontal|center_vertical"
-			android:text="About"
+			android:text="@string/menu_about"
 			android:textSize="12sp"
 			android:textColor="#424242" />
 		<TextView
@@ -92,7 +92,18 @@
 			android:layout_marginTop="17dp"
 			android:padding="12dp"
 			android:gravity="center_horizontal|center_vertical"
-			android:text="More apps"
+			android:text="@string/menu_more_apps"
+			android:textSize="12sp"
+			android:textColor="#424242" />
+		<TextView
+			android:id="@+id/b3"
+			android:focusable="false"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="17dp"
+			android:padding="12dp"
+			android:gravity="center_horizontal|center_vertical"
+			android:text="@string/menu_change_api_key"
 			android:textSize="12sp"
 			android:textColor="#424242" />
 		<TextView
@@ -101,7 +112,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="10dp"
-			android:text="Version 1.0.0"
+			android:text="@string/about_version"
 			android:textSize="12sp"
 			android:textColor="#9E9E9E" />
 	</LinearLayout>

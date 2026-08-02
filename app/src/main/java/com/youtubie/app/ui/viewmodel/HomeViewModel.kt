@@ -1,5 +1,4 @@
 package com.youtubie.app.ui.viewmodel
-import com.youtubie.app.R
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

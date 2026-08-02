@@ -13,9 +13,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.youtubie.app.R
 import com.youtubie.app.data.model.DownloadHistoryItem
 import com.youtubie.app.util.PreferenceManager
+import com.youtubie.app.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -204,7 +204,7 @@ class DownloadWorker(
 
             val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ytlogo)
-                .setContentTitle(if (success) "Download Complete" else "Download Failed")
+                .setContentTitle(if (success) applicationContext.getString(R.string.download_complete) else applicationContext.getString(R.string.download_failed))
                 .setContentText(if (success) "$title saved to $destinationPath" else "Failed to download $title")
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

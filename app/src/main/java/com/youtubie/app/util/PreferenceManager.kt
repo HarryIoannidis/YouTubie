@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.youtubie.app.data.model.DownloadHistoryItem
+import com.youtubie.app.BuildConfig
 import javax.inject.Inject
 import javax.inject.Singleton
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,6 +37,35 @@ class PreferenceManager @Inject constructor(
      */
     fun setFirstLaunch(isFirst: Boolean) {
         prefs.edit().putBoolean("is_first_launch", isFirst).apply()
+    }
+
+    /**
+     * Reads the user-provided RapidAPI key, falling back to [BuildConfig.RAPID_API_KEY].
+     *
+     * @return the active key, or null when neither saved key nor BuildConfig key exists.
+     */
+    fun getApiKey(): String? {
+        val savedKey = prefs.getString("rapid_api_key", null)
+        if (!savedKey.isNullOrBlank()) {
+            return savedKey
+        }
+        return BuildConfig.RAPID_API_KEY.takeIf { it.isNotBlank() }
+    }
+
+    /**
+     * Persists a user-provided RapidAPI key.
+     *
+     * @param key RapidAPI key entered by the user.
+     */
+    fun setApiKey(key: String) {
+        prefs.edit().putString("rapid_api_key", key).apply()
+    }
+
+    /**
+     * Returns whether a non-blank user-provided RapidAPI key is available.
+     */
+    fun hasApiKey(): Boolean {
+        return !getApiKey().isNullOrBlank()
     }
 
     /**

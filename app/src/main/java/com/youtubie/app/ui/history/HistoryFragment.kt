@@ -11,10 +11,10 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.youtubie.app.R
 import com.youtubie.app.databinding.HistoryFragmentBinding
 import com.youtubie.app.util.PreferenceManager
 import com.youtubie.app.data.model.DownloadHistoryItem
+import com.youtubie.app.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -113,16 +113,18 @@ class HistoryFragment : Fragment() {
         titleView.text = item.title
         channelView.text = item.channelTitle
         
-        // Use duration if available, otherwise show date
-        if (!item.duration.isNullOrEmpty()) {
-            dateView.text = item.duration
-            val iconDate = dialogView.findViewById<ImageView>(R.id.imageviewDate)
-            iconDate.setImageResource(R.drawable.ic_access_time_black)
-        } else {
-            dateView.text = item.downloadDate
-        }
+        dateView.text = item.downloadDate
+        val iconDate = dialogView.findViewById<ImageView>(R.id.imageviewDate)
+        iconDate?.setImageResource(R.drawable.ic_access_time)
         
         formatView.text = item.format
+        val formatIconView = dialogView.findViewById<ImageView>(R.id.imageviewFormat)
+        val iconRes = when {
+            item.format.contains("audio", ignoreCase = true) || item.format.contains("mp3", ignoreCase = true) -> R.drawable.mp3_file
+            item.format.contains("image", ignoreCase = true) || item.format.contains("png", ignoreCase = true) -> R.drawable.png_file
+            else -> R.drawable.mp4_file
+        }
+        formatIconView?.setImageResource(iconRes)
 
         val cardView = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.cardview)
         cardView.radius = 18f
@@ -178,10 +180,10 @@ class HistoryFragment : Fragment() {
         val b1 = dialogView.findViewById<TextView>(R.id.b1)
         val b2 = dialogView.findViewById<TextView>(R.id.b2)
 
-        t1.text = "Clear History?"
-        t2.text = "Are you sure you want to clear your download history?"
-        b1.text = "Keep"
-        b2.text = "Clear"
+        t1.text = getString(R.string.clear_history_title)
+        t2.text = getString(R.string.clear_history_confirm)
+        b1.text = getString(R.string.action_keep)
+        b2.text = getString(R.string.action_clear)
 
         b1.setOnClickListener {
             dialog.dismiss()
@@ -191,7 +193,7 @@ class HistoryFragment : Fragment() {
             preferenceManager.clearHistory()
             loadHistory()
             dialog.dismiss()
-            Toast.makeText(requireContext(), "History cleared", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.history_cleared), Toast.LENGTH_SHORT).show()
         }
 
         dialog.setCancelable(true)

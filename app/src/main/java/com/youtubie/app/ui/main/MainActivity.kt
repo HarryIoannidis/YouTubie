@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.youtubie.app.databinding.MainBinding
 import com.youtubie.app.ui.welcome.WelcomeActivity
 import com.youtubie.app.util.PreferenceManager
+import com.youtubie.app.R
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

@@ -65,6 +65,7 @@ hilt {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.get()}"
     implementation libs.androidx.appcompat
     implementation libs.androidx.core.ktx
     implementation libs.material

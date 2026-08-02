@@ -28,7 +28,7 @@
 			<ImageView
 				android:layout_width="24dp"
 				android:layout_height="24dp"
-				android:src="@drawable/ic_history_black"
+				android:src="@drawable/ic_history"
 				android:scaleType="fitCenter" />
 
 			<TextView
@@ -36,7 +36,7 @@
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
 				android:layout_marginLeft="10dp"
-				android:text="Recent Searches"
+				android:text="@string/search_history_title"
 				android:textColor="#000000"
 				android:textSize="15sp"
 				android:textStyle="bold" />
@@ -46,7 +46,7 @@
 				android:layout_width="24dp"
 				android:layout_height="24dp"
 				android:padding="0dp"
-				android:src="@drawable/ic_delete_black"
+				android:src="@drawable/ic_delete"
 				android:scaleType="fitCenter"
 				android:background="?attr/selectableItemBackgroundBorderless"
 				android:contentDescription="Clear search history" />

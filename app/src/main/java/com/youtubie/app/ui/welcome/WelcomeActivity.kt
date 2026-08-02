@@ -1,11 +1,13 @@
 package com.youtubie.app.ui.welcome
 
-import com.youtubie.app.R
+import com.youtubie.app.BuildConfig
 import com.youtubie.app.ui.main.MainpageActivity
 import com.youtubie.app.ui.intro.IntroFragment1
 import com.youtubie.app.ui.intro.IntroFragment2
 import com.youtubie.app.ui.intro.IntroFragment3
+import com.youtubie.app.ui.showApiKeyDialog
 import com.youtubie.app.util.PreferenceManager
+import com.youtubie.app.R
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -43,10 +45,9 @@ class WelcomeActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (!isGranted) {
-            Toast.makeText(this, "Storage permission helps with downloading files.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.permission_storage_toast), Toast.LENGTH_SHORT).show()
         }
-        // Proceed to main app regardless
-        navigateToMainPage()
+        continueToMainPageWhenKeyIsAvailable()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +77,6 @@ class WelcomeActivity : AppCompatActivity() {
 
         binding.textviewButton.setOnClickListener {
             if (current == 2.0) {
-                preferenceManager.setFirstLaunch(false)
                 requestStoragePermissionAndNavigate()
             } else {
                 binding.viewpager1.currentItem = (current + 1).toInt()
@@ -85,7 +85,7 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
     /**
-     * Requests legacy external-storage permission when needed, then continues into the main screen.
+     * Requests legacy external-storage permission when needed, then checks that an API key is available.
      */
     private fun requestStoragePermissionAndNavigate() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
@@ -96,13 +96,30 @@ class WelcomeActivity : AppCompatActivity() {
             }
         }
         // Already granted or not needed (API 29+)
-        navigateToMainPage()
+        continueToMainPageWhenKeyIsAvailable()
+    }
+
+    /**
+     * Continues into the app when a baked-in or saved key exists; otherwise requires one from the user.
+     */
+    private fun continueToMainPageWhenKeyIsAvailable() {
+        val hasKey = preferenceManager.hasApiKey() || BuildConfig.RAPID_API_KEY.isNotBlank()
+        if (hasKey) {
+            navigateToMainPage()
+            return
+        }
+
+        showApiKeyDialog(prefill = null, cancelable = false) { apiKey ->
+            preferenceManager.setApiKey(apiKey)
+            navigateToMainPage()
+        }
     }
 
     /**
      * Opens [MainpageActivity] and closes onboarding.
      */
     private fun navigateToMainPage() {
+        preferenceManager.setFirstLaunch(false)
         intentObj.setClass(applicationContext, MainpageActivity::class.java)
         startActivity(intentObj)
         finish()
@@ -114,11 +131,11 @@ class WelcomeActivity : AppCompatActivity() {
      * @param position zero-based onboarding page index.
      */
     private fun updateIndicators(position: Int) {
-        binding.imageview1.setImageResource(if (position == 0) R.drawable.ic_brightness_1_black else R.drawable.ic_panorama_fisheye_black)
-        binding.imageview2.setImageResource(if (position == 1) R.drawable.ic_brightness_1_black else R.drawable.ic_panorama_fisheye_black)
-        binding.imageview3.setImageResource(if (position == 2) R.drawable.ic_brightness_1_black else R.drawable.ic_panorama_fisheye_black)
+        binding.imageview1.setImageResource(if (position == 0) R.drawable.ic_circle_filled else R.drawable.ic_circle_outline)
+        binding.imageview2.setImageResource(if (position == 1) R.drawable.ic_circle_filled else R.drawable.ic_circle_outline)
+        binding.imageview3.setImageResource(if (position == 2) R.drawable.ic_circle_filled else R.drawable.ic_circle_outline)
         
-        binding.textviewButton.text = if (position == 2) "Get Started" else "Next"
+        binding.textviewButton.text = if (position == 2) getString(R.string.action_get_started) else getString(R.string.action_next)
     }
 
     /**

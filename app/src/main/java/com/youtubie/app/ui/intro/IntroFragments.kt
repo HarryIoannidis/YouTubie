@@ -1,6 +1,7 @@
 package com.youtubie.app.ui.intro
-import com.youtubie.app.R
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.youtubie.app.databinding.Fragment1FragmentBinding
 import com.youtubie.app.databinding.Fragment2FragmentBinding
 import com.youtubie.app.databinding.Fragment3FragmentBinding
+import com.youtubie.app.databinding.FragmentAboutInfoBinding
 import com.youtubie.app.databinding.FragmentAboutInstructionsBinding
 import com.youtubie.app.databinding.FragmentAboutTipsBinding
 
@@ -58,6 +60,25 @@ class AboutInstructionsFragment : Fragment() {
 class AboutTipsFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentAboutTipsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+}
+
+/**
+ * Info page shown from the about screen with app description, developer links, and license.
+ */
+class AboutInfoFragment : Fragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val binding = FragmentAboutInfoBinding.inflate(inflater, container, false)
+
+        binding.linkGithub.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/HarryIoannidis")))
+        }
+
+        binding.linkLinkedin.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/harry-ioannidis-hafa/")))
+        }
+
         return binding.root
     }
 }

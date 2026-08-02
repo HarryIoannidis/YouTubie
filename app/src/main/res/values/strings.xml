@@ -1,3 +1,113 @@
 <resources>
-	<string name="app_name" translatable="false">YouTubiee</string>
+    <string name="app_name" translatable="false">YouTubie</string>
+
+    <!-- General Actions & Buttons -->
+    <string name="action_cancel">Cancel</string>
+    <string name="action_close">Close</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_dismiss">Dismiss</string>
+    <string name="action_done">Done</string>
+    <string name="action_hide">Hide</string>
+    <string name="action_keep">Keep</string>
+    <string name="action_next">Next</string>
+    <string name="action_get_started">Get Started</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_search">Search</string>
+    <string name="action_search_another">Search another video</string>
+    <string name="action_stay">Stay</string>
+    <string name="action_quit">Quit</string>
+    <string name="action_clear">Clear</string>
+
+    <!-- Main Navigation & Titles -->
+    <string name="nav_home">Home</string>
+    <string name="nav_history">History</string>
+    <string name="title_about_youtubie">About YouTubie</string>
+
+    <!-- Home Screen -->
+    <string name="search_title">Search for a YouTube video</string>
+    <string name="search_hint">https://www.youtube.com/...</string>
+    <string name="download_tips">Download tips</string>
+    <string name="download_instructions">Download instructions</string>
+    <string name="download_options">Download options</string>
+    <string name="option_audio">Audio</string>
+    <string name="option_video">Video</string>
+    <string name="label_channel">Channel</string>
+    <string name="label_views">Views</string>
+    <string name="label_duration">Duration</string>
+    <string name="error_oops">Oops!</string>
+    <string name="error_connection">There was an error connecting to the server. Please check your internet connection and try again.</string>
+
+    <!-- History Screen & Sheet -->
+    <string name="clear_history_title">Clear History?</string>
+    <string name="clear_history_confirm">Are you sure you want to clear your download history?</string>
+    <string name="history_cleared">History cleared</string>
+    <string name="search_history_title">Search History</string>
+
+    <!-- API Key Dialog -->
+    <string name="api_key_dialog_title">API Key Required</string>
+    <string name="api_key_dialog_subtitle">YouTubie requires a RapidAPI key to fetch video data. Please paste your key below or tap "Get API Key" to obtain one.</string>
+    <string name="api_key_hint">Paste your RapidAPI key here</string>
+    <string name="get_api_key">Get API Key</string>
+    <string name="toast_enter_api_key">Please enter your RapidAPI key.</string>
+    <string name="toast_no_browser">No browser is available to open RapidAPI.</string>
+    <string name="error_no_api_key">RapidAPI key is not configured. Please enter one in the app.</string>
+
+    <!-- Downloads -->
+    <string name="downloading_media">Downloading Media</string>
+    <string name="downloading_video">Downloading video...</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="download_complete_desc">Saved to Downloads/YouTubie</string>
+    <string name="download_failed">Download Failed</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="download_started">Download started in background</string>
+    <string name="starting_download">Starting download...\nProgress: 0%</string>
+    <string name="download_progress">Downloading...\nProgress: %1$d%%</string>
+
+    <!-- Onboarding Intro -->
+    <string name="intro_title_1">Easy Download</string>
+    <string name="intro_desc_1">Download easily any video you want from YouTube without any limitations or subscriptions.</string>
+    <string name="intro_title_2">High Speed</string>
+    <string name="intro_desc_2">Fast downloading speeds using multi-threaded chunk transfer technology.</string>
+    <string name="intro_title_3">No Ads</string>
+    <string name="intro_desc_3">Seamless experience with no interruptions from annoying advertising.</string>
+    <string name="permission_storage_toast">Storage permission helps with downloading files.</string>
+
+    <!-- About Tabs -->
+    <string name="tab_info">Info</string>
+    <string name="tab_tips">Tips</string>
+    <string name="tab_instructions">Instructions</string>
+
+    <string name="about_section_about">About</string>
+    <string name="about_desc">YouTubie is a high-performance video discovery and download prototype for Android. Built with a modern tech stack — Kotlin, Coroutines, Dagger Hilt, Retrofit, and WorkManager — it demonstrates a modular architecture capable of handling multi-threaded data transfers and delivering a consistent, immersive user experience.</string>
+    <string name="about_section_disclaimer">Disclaimer</string>
+    <string name="about_disclaimer_desc">This is a portfolio project created for educational and demonstration purposes only. Please respect all digital licenses, copyrights, and terms of service when using this application. The developer is not responsible for any misuse. Do not use this application to infringe upon the intellectual property rights of content creators or rights holders.</string>
+    <string name="about_section_developer">Developer</string>
+    <string name="about_github_link">GitHub — HarryIoannidis</string>
+    <string name="about_linkedin_link">LinkedIn — Harry Ioannidis</string>
+    <string name="about_section_license">License</string>
+    <string name="about_license_title">MIT License © YouTubie Contributors</string>
+    <string name="about_license_desc">Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files, to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the conditions stated in the full MIT License.</string>
+    <string name="about_version">Version 1.0.0</string>
+
+    <string name="instructions_title">Instructions for searching and downloading.</string>
+    <string name="instruction_step_1">Paste the link you copied in the field and then press the "Search" button. Be aware that only YouTube videos can be searched containing the "youtu.be" or "youtube.com" and not YouTube shorts.</string>
+    <string name="instruction_step_2">While searching, do not close the application nor the internet connection. Once the search is successful, you can view the video\'s data on your screen.</string>
+    <string name="instruction_step_3">Click the "Audio" or "Video" button to download the video in your preferred format in HD quality.</string>
+    <string name="instruction_step_4">After downloading anything, it will show in the download history screen. Swipe left from the homepage to view the history.</string>
+    <string name="instruction_step_5">Click the "Search another video" button to clear your current search and start again. Your current search will not be saved.</string>
+
+    <string name="tips_title">Tips for downloading.</string>
+    <string name="tip_1">To successfully download YouTube videos you need to have a stable internet connection and you need to have granted the necessary storage permissions.</string>
+    <string name="tip_2">Some videos are not downloadable due to YouTube restrictions on copyrighted material such as VEVO videos. To be able to download such VEVO songs, try searching for:\n1. Lyrics-only videos\n2. Same songs uploaded by non-VEVO channels\n3. Automatically generated topics from YouTube</string>
+    <string name="tip_3">If you face a "Could not search for video" error then try your luck some time later. Sometimes its a server-wise problem and not the video\'s or YouTube\'s fault.</string>
+    <string name="tip_4">Long-clicking the thumbnail of your searched YouTube video will let you download it in png format and HD quality.</string>
+
+    <!-- Overflow Bottom Sheet -->
+    <string name="menu_about">About</string>
+    <string name="menu_more_apps">More apps</string>
+    <string name="menu_change_api_key">Change API Key</string>
+
+    <!-- Quit Dialog -->
+    <string name="quit_dialog_title">Leave?</string>
+    <string name="quit_dialog_desc">Are you sure you want to quit the app? Your current search will not be saved.</string>
 </resources>

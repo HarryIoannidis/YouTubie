@@ -25,7 +25,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginBottom="10dp"
 				android:padding="8dp"
-				android:text="Home"
+				android:text="@string/nav_home"
 				android:textSize="16sp"
 				android:textColor="#000000" />
 			<LinearLayout
@@ -71,7 +71,7 @@
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:padding="8dp"
-						android:text="Search for a YouTube video"
+						android:text="@string/search_title"
 						android:textSize="14sp"
 						android:textColor="#000000"
 						android:layout_gravity="center_horizontal|center_vertical" />
@@ -91,7 +91,7 @@
 							android:layout_height="30dp"
 							android:layout_marginLeft="8dp"
 							android:padding="3dp"
-							android:src="@drawable/ic_search_black"
+							android:src="@drawable/ic_search"
 							android:scaleType="fitXY"
 							android:layout_gravity="center_horizontal|center_vertical" />
 						<EditText
@@ -103,7 +103,7 @@
 							android:gravity="center_vertical"
 							android:textSize="12sp"
 							android:textColor="#000000"
-							android:hint="https://www.youtube.com/..."
+							android:hint="@string/search_hint"
 							android:textColorHint="#607D8B"
 							android:singleLine="true"
 							android:lines="2"
@@ -116,7 +116,7 @@
 							android:layout_height="30dp"
 							android:layout_marginRight="10dp"
 							android:padding="5dp"
-							android:src="@drawable/ic_history_black"
+							android:src="@drawable/ic_history"
 							android:scaleType="fitXY"
 							android:background="?attr/selectableItemBackgroundBorderless"
 							android:layout_gravity="center_horizontal|center_vertical" />
@@ -128,7 +128,7 @@
 						android:layout_marginBottom="5dp"
 						android:padding="8dp"
 						android:gravity="center_horizontal|center_vertical"
-						android:text="Download tips"
+						android:text="@string/download_tips"
 						android:textSize="12sp"
 						android:textColor="#000000"
 						android:background="@drawable/rounded_transparent_ripple"
@@ -142,7 +142,7 @@
 						android:layout_marginBottom="5dp"
 						android:padding="8dp"
 						android:gravity="center_horizontal|center_vertical"
-						android:text="Download instructions"
+						android:text="@string/download_instructions"
 						android:textSize="12sp"
 						android:textColor="#000000"
 						android:background="@drawable/rounded_transparent_ripple"
@@ -173,7 +173,7 @@
 						android:id="@+id/textviewSearch"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="Search"
+						android:text="@string/action_search"
 						android:textSize="14sp"
 						android:textColor="#000000" />
 				</LinearLayout>
@@ -260,14 +260,14 @@
 									android:layout_width="30dp"
 									android:layout_height="30dp"
 									android:padding="3dp"
-									android:src="@drawable/ic_account_circle_black"
+									android:src="@drawable/ic_account_circle"
 									android:scaleType="fitXY" />
 								<TextView
 									android:id="@+id/textviewChannel"
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:gravity="center_horizontal|center_vertical"
-									android:text="Channel"
+									android:text="@string/label_channel"
 									android:textSize="13sp"
 									android:textColor="#000000"
 									android:lines="2" />
@@ -288,14 +288,14 @@
 									android:layout_width="30dp"
 									android:layout_height="30dp"
 									android:padding="3dp"
-									android:src="@drawable/ic_remove_red_eye_black"
+									android:src="@drawable/ic_visibility"
 									android:scaleType="centerCrop" />
 								<TextView
 									android:id="@+id/textviewViews"
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:gravity="center_horizontal|center_vertical"
-									android:text="Views"
+									android:text="@string/label_views"
 									android:textSize="13sp"
 									android:textColor="#000000"
 									android:lines="2" />
@@ -315,14 +315,14 @@
 									android:layout_width="30dp"
 									android:layout_height="30dp"
 									android:padding="3dp"
-									android:src="@drawable/ic_access_time_black"
+									android:src="@drawable/ic_access_time"
 									android:scaleType="fitXY" />
 								<TextView
 									android:id="@+id/textviewDuration"
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:gravity="center_horizontal|center_vertical"
-									android:text="Duration"
+									android:text="@string/label_duration"
 									android:textSize="13sp"
 									android:textColor="#000000"
 									android:lines="2" />
@@ -340,7 +340,7 @@
 								android:layout_height="wrap_content"
 								android:layout_marginLeft="5dp"
 								android:layout_marginBottom="5dp"
-								android:text="Download options"
+								android:text="@string/download_options"
 								android:textSize="15sp"
 								android:textStyle="bold"
 								android:textColor="#000000" />
@@ -375,7 +375,7 @@
 										android:id="@+id/textviewAudio"
 										android:layout_width="wrap_content"
 										android:layout_height="wrap_content"
-										android:text="Audio"
+										android:text="@string/option_audio"
 										android:textSize="14sp"
 										android:textColor="#FFFFFF"
 										android:layout_gravity="center_horizontal|center_vertical" />
@@ -402,7 +402,7 @@
 										android:id="@+id/textviewVideo"
 										android:layout_width="wrap_content"
 										android:layout_height="wrap_content"
-										android:text="Video"
+										android:text="@string/option_video"
 										android:textSize="14sp"
 										android:textColor="#FFFFFF"
 										android:layout_gravity="center_horizontal|center_vertical" />
@@ -428,7 +428,7 @@
 						android:id="@+id/textviewSearchAgain"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="Search another video"
+						android:text="@string/action_search_another"
 						android:textSize="14sp"
 						android:textColor="#000000" />
 				</LinearLayout>
@@ -456,7 +456,7 @@
 					android:id="@+id/errorTitle"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="Oops!"
+					android:text="@string/error_oops"
 					android:textSize="18sp"
 					android:textColor="#000000" />
 				<TextView
@@ -467,7 +467,7 @@
 					android:layout_marginRight="8dp"
 					android:padding="8dp"
 					android:gravity="center_horizontal|center_vertical"
-					android:text="There was an error connecting to the server. Please check your internet connection and try again."
+					android:text="@string/error_connection"
 					android:textSize="14sp"
 					android:textColor="#000000" />
 				<LinearLayout
@@ -491,7 +491,7 @@
 						android:id="@+id/textviewRefresh"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:text="Refresh"
+						android:text="@string/action_refresh"
 						android:textSize="16sp"
 						android:textColor="#000000" />
 				</LinearLayout>
