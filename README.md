@@ -27,6 +27,31 @@
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <img src="screenshots/home_screen.jpg" width="180" alt="Home Screen"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/api_key_setup.jpg" width="180" alt="API Key Setup"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/search_results.jpg" width="180" alt="Search Results"/>
+</p>
+<p align="center">
+  <img src="screenshots/download_progress.jpg" width="180" alt="Download Progress"/>
+  &nbsp;&nbsp;
+  <img src="screenshots/download_history.jpg" width="180" alt="Download History"/>
+</p>
+
+| Screen | Description |
+| :---: | :--- |
+| **Home** | Paste a YouTube URL or search to discover videos |
+| **API Key Setup** | First-launch dialog to enter your RapidAPI key |
+| **Search Results** | Video details with thumbnail, views, duration, and Audio/Video download options |
+| **Download Progress** | Real-time progress bar powered by the parallel download engine |
+| **Download History** | Browse all previously downloaded files with metadata |
+
+---
+
 ## 🛠️ Technical Deep Dive
 
 ### Parallel Download Engine
