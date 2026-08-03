@@ -15,12 +15,8 @@
 *   **Range-Based Fetching**: Implements HTTP Range headers to maximize bandwidth usage during audio and video downloads.
 *   **Optimized Throughput**: Features a large 256KB data buffer for smooth, high-speed transfers on modern networks.
 
-### 2. Modern Design System
-*   **Unified UI**: A cohesive card-based design language shared between Search Results and Download History.
-*   **Geometric Precision**: Carefully aligned curvatures and spacing for a polished, professional feel.
-*   **Immersive Experience**: Full-screen splash phase and smooth activity-fade transitions for seamless navigation.
 
-### 3. Robust Architecture
+### 2. Robust Architecture
 *   **Dagger Hilt DI**: Clean dependency injection for testability and scalability.
 *   **WorkManager Integration**: Reliable background task handling for long-running parallel transfers.
 *   **Coroutines & Flow**: Reactive UI state management for a flicker-free, responsive interface.
