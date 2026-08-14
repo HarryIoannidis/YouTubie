@@ -175,4 +175,58 @@ class PreferenceManager @Inject constructor(
     fun clearSearchHistory() {
         prefs.edit().remove("search_history_v2").remove("search_history").apply()
     }
+
+    /**
+     * Returns whether the auto-paste-from-clipboard feature is enabled.
+     *
+     * @return true when auto-paste is on (default), false when the user turned it off.
+     */
+    fun isAutoClipboardEnabled(): Boolean {
+        return prefs.getBoolean("auto_clipboard_enabled", true)
+    }
+
+    /**
+     * Persists the auto-paste-from-clipboard toggle state.
+     *
+     * @param enabled true to enable clipboard detection, false to disable.
+     */
+    fun setAutoClipboardEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean("auto_clipboard_enabled", enabled).apply()
+    }
+
+    /**
+     * Returns whether the user checked "Don't ask again" on the clipboard dialog.
+     *
+     * @return true when the dialog should be skipped and paste should happen silently.
+     */
+    fun isDontAskClipboardAgain(): Boolean {
+        return prefs.getBoolean("dont_ask_clipboard_again", false)
+    }
+
+    /**
+     * Persists the "Don't ask again" checkbox state from the clipboard dialog.
+     *
+     * @param dontAsk true to skip the dialog and auto-paste silently in the future.
+     */
+    fun setDontAskClipboardAgain(dontAsk: Boolean) {
+        prefs.edit().putBoolean("dont_ask_clipboard_again", dontAsk).apply()
+    }
+
+    /**
+     * Returns the last clipboard text that was processed to avoid re-prompting.
+     *
+     * @return the previously handled clipboard text, or null if none was stored.
+     */
+    fun getLastClipboardText(): String? {
+        return prefs.getString("last_clipboard_text", null)
+    }
+
+    /**
+     * Persists the last clipboard text that was processed.
+     *
+     * @param text clipboard content that was already shown or auto-pasted.
+     */
+    fun setLastClipboardText(text: String?) {
+        prefs.edit().putString("last_clipboard_text", text).apply()
+    }
 }

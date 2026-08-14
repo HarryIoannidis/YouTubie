@@ -1,7 +1,5 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical">
@@ -52,7 +50,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginBottom="3dp"
-					android:text="@string/app_name"
+					android:text="@string/menu_preferences"
 					android:textSize="14sp"
 					android:textColor="#212121" />
 			</LinearLayout>
@@ -81,39 +79,35 @@
 			android:layout_height="wrap_content"
 			android:padding="12dp"
 			android:gravity="center_horizontal|center_vertical"
-			android:text="@string/menu_about"
+			android:text="@string/menu_change_api_key"
 			android:textSize="12sp"
 			android:textColor="#424242" />
-		<TextView
-			android:id="@+id/b2"
-			android:focusable="false"
+		<LinearLayout
+			android:id="@+id/linearToggle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="17dp"
 			android:padding="12dp"
 			android:gravity="center_horizontal|center_vertical"
-			android:text="@string/menu_more_apps"
-			android:textSize="12sp"
-			android:textColor="#424242" />
-		<TextView
-			android:id="@+id/b3"
-			android:focusable="false"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="17dp"
-			android:padding="12dp"
-			android:gravity="center_horizontal|center_vertical"
-			android:text="@string/menu_preferences"
-			android:textSize="12sp"
-			android:textColor="#424242" />
-		<TextView
-			android:id="@+id/t4"
-			android:focusable="false"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="10dp"
-			android:text="@string/about_version"
-			android:textSize="12sp"
-			android:textColor="#9E9E9E" />
+			android:orientation="horizontal">
+			<TextView
+				android:id="@+id/toggleLabel"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/pref_auto_paste_clipboard"
+				android:textSize="12sp"
+				android:textColor="#424242" />
+			<TextView
+				android:id="@+id/toggleStatus"
+				android:focusable="false"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="8dp"
+				android:text="@string/pref_on"
+				android:textSize="12sp"
+				android:textStyle="bold"
+				android:textColor="#4CAF50" />
+		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>

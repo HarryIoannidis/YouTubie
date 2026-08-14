@@ -677,6 +677,18 @@ class HomeFragment : Fragment() {
     }
 
     /**
+     * Public entry point called by [MainpageActivity] to paste a URL and auto-search.
+     * Used for clipboard auto-paste and share intent flows.
+     *
+     * @param url YouTube URL to search.
+     */
+    fun pasteAndSearch(url: String) {
+        if (_binding == null) return
+        binding.searchEditText.setText(url)
+        performSearch(url)
+    }
+
+    /**
      * Displays saved search history and lets the user rerun or clear previous searches.
      */
     private fun showSearchHistoryBottomSheet() {

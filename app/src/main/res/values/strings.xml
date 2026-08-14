@@ -110,4 +110,20 @@
     <!-- Quit Dialog -->
     <string name="quit_dialog_title">Leave?</string>
     <string name="quit_dialog_desc">Are you sure you want to quit the app? Your current search will not be saved.</string>
+
+    <!-- Clipboard Dialog -->
+    <string name="clipboard_dialog_title">YouTube Link Detected</string>
+    <string name="clipboard_dialog_desc">YouTubie has recognised a YouTube link copied in your clipboard. Paste automatically?</string>
+    <string name="clipboard_dont_ask_again">Don\'t ask again</string>
+    <string name="action_paste">Paste</string>
+
+    <!-- Preferences -->
+    <string name="menu_preferences">Preferences</string>
+    <string name="pref_auto_paste_clipboard">Auto paste from clipboard:</string>
+    <string name="pref_on">ON</string>
+    <string name="pref_off">OFF</string>
+
+    <!-- Share -->
+    <string name="toast_not_youtube_link">The shared text is not a valid YouTube link.</string>
 </resources>
+
