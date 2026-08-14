@@ -108,17 +108,6 @@ class HomeFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
         binding.progressbarRefresh.visibility = View.GONE
 
-        // Apply card and pill styles programmatically to match design
-        _RoundAndBorder(binding.linearForSearchMain, "#FAFAFA", 2.0, "#DDDDDD", 30.0)
-        _RoundAndBorder(binding.linearSearchResult, "#FAFAFA", 2.0, "#DDDDDD", 30.0)
-        _RoundAndBorder(binding.linearEditText, "#FFFFFF", 2.0, "#CCCCCC", 90.0)
-        _rippleRoundStroke(binding.linearSearch, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
-        _rippleRoundStroke(binding.linearRefresh, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
-        _rippleRoundStroke(binding.linearSearchAgain, "#FAFAFA", "#EEEEEE", 45.0, 2.0, "#DDDDDD")
-
-        // Reduce thumbnail radius as requested
-        binding.cardview.radius = 20f
-
         // Style the tips and instructions links as underlined black text
         binding.textviewTips.paintFlags = binding.textviewTips.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
         binding.textviewInstructions.paintFlags = binding.textviewInstructions.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
@@ -267,54 +256,7 @@ class HomeFragment : Fragment() {
         return progressiveVideo?.url ?: metadata.formats?.firstOrNull()?.url
     }
 
-    /**
-     * Applies a solid rounded rectangle background with a border.
-     *
-     * @param view target view to style.
-     * @param color1 fill color.
-     * @param border border width in pixels.
-     * @param color2 border color.
-     * @param round corner radius in pixels.
-     */
-    private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
-        val gd = android.graphics.drawable.GradientDrawable()
-        gd.setColor(android.graphics.Color.parseColor(color1))
-        gd.cornerRadius = round.toFloat()
-        gd.setStroke(border.toInt(), android.graphics.Color.parseColor(color2))
-        view.background = gd
-    }
 
-    /**
-     * Applies a rounded background with ripple feedback and outline clipping.
-     *
-     * @param view target view to style.
-     * @param focus background color used at rest.
-     * @param pressed ripple color used during touch feedback.
-     * @param round corner radius in pixels.
-     * @param stroke border width in pixels.
-     * @param strokeclr border color, with or without a leading #.
-     */
-    private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
-        val GG = android.graphics.drawable.GradientDrawable()
-        GG.setColor(android.graphics.Color.parseColor(focus))
-        GG.cornerRadius = round.toFloat()
-        GG.setStroke(stroke.toInt(), android.graphics.Color.parseColor("#" + strokeclr.replace("#", "")))
-        val mask = android.graphics.drawable.GradientDrawable()
-        mask.setColor(android.graphics.Color.WHITE)
-        mask.cornerRadius = round.toFloat()
-        val RE = android.graphics.drawable.RippleDrawable(
-            android.content.res.ColorStateList(arrayOf(intArrayOf()), intArrayOf(android.graphics.Color.parseColor(pressed))),
-            GG,
-            mask
-        )
-        view.background = RE
-        view.outlineProvider = object : android.view.ViewOutlineProvider() {
-            override fun getOutline(v: View, outline: android.graphics.Outline) {
-                outline.setRoundRect(0, 0, v.width, v.height, round.toFloat())
-            }
-        }
-        view.clipToOutline = true
-    }
 
     /**
      * Requests any needed runtime permissions before starting a download.
@@ -697,9 +639,6 @@ class HomeFragment : Fragment() {
         val bottomSheetDialog = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext())
         val bottomSheetView = layoutInflater.inflate(R.layout.dialog_search_history, null)
         bottomSheetDialog.setContentView(bottomSheetView)
-
-        val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
-        _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
 
         val listview = bottomSheetView.findViewById<ListView>(R.id.listviewSearchHistory)
         val textviewEmpty = bottomSheetView.findViewById<TextView>(R.id.textviewEmpty)

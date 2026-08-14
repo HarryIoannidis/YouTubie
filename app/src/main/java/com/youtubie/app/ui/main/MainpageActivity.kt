@@ -197,15 +197,6 @@ class MainpageActivity : AppCompatActivity() {
         val b2 = bottomSheetView.findViewById<TextView>(R.id.b2)
         val b3 = bottomSheetView.findViewById<TextView>(R.id.b3)
         val i2 = bottomSheetView.findViewById<ImageView>(R.id.i2)
-        val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
-
-        _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
-        _rippleRoundStroke(b1, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(b2, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(b3, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(i2, "#FFFFFF", "#40000000", 90.0, 0.0, "#FFFFFF")
-        
-        i2.setImageResource(R.drawable.cross)
         
         b1.setOnClickListener {
             bottomSheetDialog.dismiss()
@@ -327,18 +318,10 @@ class MainpageActivity : AppCompatActivity() {
         bottomSheetDialog.window?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             ?.setBackgroundResource(android.R.color.transparent)
 
-        val bg2 = bottomSheetView.findViewById<LinearLayout>(R.id.bg2)
         val b1 = bottomSheetView.findViewById<TextView>(R.id.b1)
         val linearToggle = bottomSheetView.findViewById<LinearLayout>(R.id.linearToggle)
         val toggleStatus = bottomSheetView.findViewById<TextView>(R.id.toggleStatus)
         val i2 = bottomSheetView.findViewById<ImageView>(R.id.i2)
-
-        _RoundAndBorder(bg2, "#FFFFFF", 0.0, "#000000", 25.0)
-        _rippleRoundStroke(b1, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(linearToggle, "#FFFFFF", "#EEEEEE", 15.0, 2.5, "#EEEEEE")
-        _rippleRoundStroke(i2, "#FFFFFF", "#40000000", 90.0, 0.0, "#FFFFFF")
-
-        i2.setImageResource(R.drawable.cross)
 
         // Initialize toggle state
         updateToggleStatus(toggleStatus, preferenceManager.isAutoClipboardEnabled())
@@ -390,51 +373,6 @@ class MainpageActivity : AppCompatActivity() {
     private fun initializeLogic() {
         _ui()
         _viewPagerOnPageSelected()
-    }
-
-    /**
-     * Applies a solid rounded rectangle background with a border.
-     *
-     * @param view target view to style.
-     * @param color1 fill color.
-     * @param border border width in pixels.
-     * @param color2 border color.
-     * @param round corner radius in pixels.
-     */
-    private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
-        val gd = GradientDrawable()
-        gd.setColor(Color.parseColor(color1))
-        gd.cornerRadius = round.toFloat()
-        gd.setStroke(border.toInt(), Color.parseColor(color2))
-        view.background = gd
-    }
-
-    /**
-     * Applies a rounded background with ripple feedback and outline clipping.
-     *
-     * @param view target view to style.
-     * @param focus background color used at rest.
-     * @param pressed ripple color used during touch feedback.
-     * @param round corner radius in pixels.
-     * @param stroke border width in pixels.
-     * @param strokeclr border color, with or without a leading #.
-     */
-    private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
-        val GG = GradientDrawable()
-        GG.setColor(Color.parseColor(focus))
-        GG.cornerRadius = round.toFloat()
-        GG.setStroke(stroke.toInt(), Color.parseColor("#" + strokeclr.replace("#", "")))
-        val mask = GradientDrawable()
-        mask.setColor(Color.WHITE)
-        mask.cornerRadius = round.toFloat()
-        val RE = RippleDrawable(ColorStateList(arrayOf(intArrayOf()), intArrayOf(Color.parseColor(pressed))), GG, mask)
-        view.background = RE
-        view.outlineProvider = object : android.view.ViewOutlineProvider() {
-            override fun getOutline(v: View, outline: android.graphics.Outline) {
-                outline.setRoundRect(0, 0, v.width, v.height, round.toFloat())
-            }
-        }
-        view.clipToOutline = true
     }
 
     /**

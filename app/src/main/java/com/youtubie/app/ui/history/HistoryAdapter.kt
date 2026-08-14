@@ -31,10 +31,7 @@ class HistoryAdapter(
      * @return row view populated with title, channel, date, format, and thumbnail.
      */
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.download_history, parent, false).also { v ->
-            val linearBG = v.findViewById<android.widget.LinearLayout>(R.id.linearBG)
-            _rippleRoundStroke(linearBG, "#FFFFFF", "#EEEEEE", 20.0, 2.0, "EEEEEE")
-        }
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.download_history, parent, false)
         val item = getItem(position) ?: return view
 
         val thumbnailView = view.findViewById<ImageView>(R.id.imageview1)
@@ -73,39 +70,5 @@ class HistoryAdapter(
         clear()
         addAll(newItems)
         notifyDataSetChanged()
-    }
-
-    /**
-     * Applies a rounded background with ripple feedback and an outline clip.
-     *
-     * @param view target view to style.
-     * @param focus background color used at rest.
-     * @param pressed ripple color used during touch feedback.
-     * @param round corner radius in pixels.
-     * @param stroke border width in pixels.
-     * @param strokeclr border color, with or without a leading #.
-     */
-    private fun _rippleRoundStroke(view: View, focus: String, pressed: String, round: Double, stroke: Double, strokeclr: String) {
-        val GG = android.graphics.drawable.GradientDrawable()
-        GG.setColor(android.graphics.Color.parseColor(focus))
-        GG.cornerRadius = round.toFloat()
-        GG.setStroke(stroke.toInt(), android.graphics.Color.parseColor("#" + strokeclr.replace("#", "")))
-
-        val mask = android.graphics.drawable.GradientDrawable()
-        mask.setColor(android.graphics.Color.WHITE)
-        mask.cornerRadius = round.toFloat()
-
-        val RE = android.graphics.drawable.RippleDrawable(
-            android.content.res.ColorStateList(arrayOf(intArrayOf()), intArrayOf(android.graphics.Color.parseColor(pressed))),
-            GG,
-            mask
-        )
-        view.background = RE
-        view.outlineProvider = object : android.view.ViewOutlineProvider() {
-            override fun getOutline(v: View, outline: android.graphics.Outline) {
-                outline.setRoundRect(0, 0, v.width, v.height, round.toFloat())
-            }
-        }
-        view.clipToOutline = true
     }
 }

@@ -9,7 +9,7 @@
 		android:layout_height="wrap_content"
 		android:layout_margin="5dp"
 		android:padding="17dp"
-		android:background="#FFFFFF"
+		android:background="@drawable/bg_sheet_rounded"
 		android:orientation="vertical">
 		<LinearLayout
 			android:id="@+id/bg1"
@@ -68,7 +68,8 @@
 					android:layout_width="35dp"
 					android:layout_height="35dp"
 					android:padding="10dp"
-					android:src="@drawable/ic_close"
+					android:background="@drawable/ripple_close_circle"
+					android:src="@drawable/cross"
 					android:scaleType="fitXY" />
 			</LinearLayout>
 		</LinearLayout>
@@ -78,6 +79,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:padding="12dp"
+			android:background="@drawable/ripple_sheet_button"
 			android:gravity="center_horizontal|center_vertical"
 			android:text="@string/menu_change_api_key"
 			android:textSize="12sp"
@@ -88,6 +90,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginTop="17dp"
 			android:padding="12dp"
+			android:background="@drawable/ripple_sheet_button"
 			android:gravity="center_horizontal|center_vertical"
 			android:orientation="horizontal">
 			<TextView

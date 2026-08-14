@@ -100,9 +100,6 @@ class HistoryFragment : Fragment() {
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
         dialog.setView(dialogView)
 
-        val linearSearchResult = dialogView.findViewById<LinearLayout>(R.id.linearSearchResult)
-        _RoundAndBorder(linearSearchResult, "#FAFAFA", 2.0, "#DDDDDD", 30.0)
-
         val thumbnailView = dialogView.findViewById<ImageView>(R.id.thumbnail)
         val titleView = dialogView.findViewById<TextView>(R.id.title)
         val channelView = dialogView.findViewById<TextView>(R.id.channel)
@@ -126,9 +123,6 @@ class HistoryFragment : Fragment() {
         }
         formatIconView?.setImageResource(iconRes)
 
-        val cardView = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.cardview)
-        cardView.radius = 18f
-
         val rawUrl = item.thumbnailUrl
         val cleanUrl = if (rawUrl.contains("ytimg.com")) {
             rawUrl.replace("/sddefault.", "/mqdefault.")
@@ -147,23 +141,6 @@ class HistoryFragment : Fragment() {
 
         dialog.setCancelable(true)
         dialog.show()
-    }
-
-    /**
-     * Applies a solid rounded rectangle background with a border.
-     *
-     * @param view target view to style.
-     * @param color1 fill color.
-     * @param border border width in pixels.
-     * @param color2 border color.
-     * @param round corner radius in pixels.
-     */
-    private fun _RoundAndBorder(view: View, color1: String, border: Double, color2: String, round: Double) {
-        val gd = android.graphics.drawable.GradientDrawable()
-        gd.setColor(android.graphics.Color.parseColor(color1))
-        gd.cornerRadius = round.toFloat()
-        gd.setStroke(border.toInt(), android.graphics.Color.parseColor(color2))
-        view.background = gd
     }
 
     /**

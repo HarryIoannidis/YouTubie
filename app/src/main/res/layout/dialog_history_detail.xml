@@ -6,6 +6,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
 	android:padding="0dp"
+	android:background="@drawable/bg_dialog_detail"
 	android:gravity="center_horizontal"
 	android:orientation="vertical">
 	<androidx.cardview.widget.CardView
@@ -17,8 +18,8 @@
 		android:layout_marginRight="10dp"
 		android:layout_marginBottom="8dp"
 		android:gravity="center_horizontal|center_vertical"
-		app:cardCornerRadius="18dp"
-		app:cardElevation="0dp">
+		app:cardCornerRadius="7dp"
+		app:cardElevation="3dp">
 		<ImageView
 			android:id="@+id/thumbnail"
 			android:layout_width="match_parent"
@@ -26,7 +27,7 @@
 			android:adjustViewBounds="true"
 			android:background="@android:color/transparent"
 			android:src="@drawable/youtube_thumbnail"
-			android:scaleType="fitCenter" />
+			android:scaleType="fitXY" />
 	</androidx.cardview.widget.CardView>
 	<LinearLayout
 		android:id="@+id/linearInfo"
@@ -124,7 +125,7 @@
 					android:id="@+id/imageviewFormat"
 					android:layout_width="30dp"
 					android:layout_height="30dp"
-					android:padding="3dp"
+					android:padding="5dp"
 					android:src="@drawable/mp4_file"
 					android:scaleType="fitXY" />
 				<TextView
