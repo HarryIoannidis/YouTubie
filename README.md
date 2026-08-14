@@ -21,6 +21,12 @@
 *   **WorkManager Integration**: Reliable background task handling for long-running parallel transfers.
 *   **Coroutines & Flow**: Reactive UI state management for a flicker-free, responsive interface.
 
+### 3. Seamless User Experience
+*   **Clipboard Auto-Detection**: Automatically detects copied YouTube links on launch/focus with 1-tap paste and search.
+*   **Direct Share Target**: Integrates into the Android system Share Sheet to auto-search links shared directly from YouTube.
+*   **Recent Searches Modal**: Quick-access search history sheet with 1-tap replay and clearing.
+*   **In-App Preferences**: Manage your RapidAPI key and toggle clipboard auto-paste preferences anytime.
+
 ---
 
 ## 📸 Screenshots
@@ -87,7 +93,7 @@ RAPID_API_KEY=your_actual_rapidapi_key_here
 ```
 
 **For APK users:**
-On first launch, the app will prompt you to enter your RapidAPI key via a setup dialog. You can obtain a key from the [YT-API page on RapidAPI](https://rapidapi.com/ytjar/api/yt-api). You can change your API key at any time from the FAB menu → "Change API Key".
+On first launch, the app will prompt you to enter your RapidAPI key via a setup dialog. You can obtain a key from the [YT-API page on RapidAPI](https://rapidapi.com/ytjar/api/yt-api). You can change your API key and configure auto-paste settings at any time from the FAB menu → "Preferences".
 
 ### 2. Build and Run
 Open the project in Android Studio, sync with Gradle, and deploy to a device with API level 23+.
