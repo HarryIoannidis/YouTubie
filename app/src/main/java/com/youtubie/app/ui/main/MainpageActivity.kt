@@ -11,10 +11,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
@@ -169,12 +166,12 @@ class MainpageActivity : AppCompatActivity() {
         dialog1.show()
     }
 
-    /**
-     * Wires bottom navigation and the floating action button.
-     */
     private fun initialize() {
         binding.navig.setOnNavigationItemSelectedListener { item ->
-            binding.viewpager.currentItem = item.itemId
+            when (item.itemId) {
+                R.id.nav_home -> binding.viewpager.currentItem = 0
+                R.id.nav_history -> binding.viewpager.currentItem = 1
+            }
             true
         }
 
@@ -387,9 +384,6 @@ class MainpageActivity : AppCompatActivity() {
         })
     }
 
-    /**
-     * Applies immersive window flags, navigation styling, and ViewPager setup.
-     */
     private fun _ui() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
@@ -398,28 +392,6 @@ class MainpageActivity : AppCompatActivity() {
         @Suppress("DEPRECATION")
         window.getDecorView().systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         
-        binding.fab.background = GradientDrawable().apply {
-            setStroke(10, Color.BLACK)
-            setColor(Color.RED)
-        }
-        
-        binding.navig.elevation = 0f
-        binding.navig.itemIconSize = 36
-        binding.fab.setImageResource(R.drawable.menu_burger)
-        binding.navig.menu.clear()
-        binding.navig.menu.add(0, 0, 0, getString(R.string.nav_home)).setIcon(R.drawable.home)
-        binding.navig.menu.add(0, 1, 0, getString(R.string.nav_history)).setIcon(R.drawable.time_past)
-
-        val colorStateList = ColorStateList(
-            arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf(-android.R.attr.state_checked)),
-            intArrayOf(Color.BLACK, Color.GRAY)
-        )
-        binding.navig.itemTextColor = colorStateList
-        binding.navig.itemIconTintList = colorStateList
-        
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            binding.navig.setItemBackgroundResource(R.drawable.selector_ripple_item)
-        }
         binding.viewpager.adapter = PagerAdapter(this)
     }
 

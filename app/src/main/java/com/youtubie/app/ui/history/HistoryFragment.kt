@@ -111,8 +111,6 @@ class HistoryFragment : Fragment() {
         channelView.text = item.channelTitle
         
         dateView.text = item.downloadDate
-        val iconDate = dialogView.findViewById<ImageView>(R.id.imageviewDate)
-        iconDate?.setImageResource(R.drawable.ic_access_time)
         
         formatView.text = item.format
         val formatIconView = dialogView.findViewById<ImageView>(R.id.imageviewFormat)

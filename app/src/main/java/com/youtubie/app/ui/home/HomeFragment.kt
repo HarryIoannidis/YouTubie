@@ -39,7 +39,7 @@ import java.util.UUID
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
-    
+
     @Inject
     lateinit var repository: YoutubeRepository
 
@@ -77,7 +77,8 @@ class HomeFragment : Fragment() {
                 performStartDownload(metadata, url, formatType)
             }
         } else {
-            Toast.makeText(requireContext(), "Storage permission is required to download files.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Storage permission is required to download files.", Toast.LENGTH_SHORT)
+                .show()
         }
         pendingDownloadMetadata = null
         pendingDownloadUrl = null
@@ -110,7 +111,8 @@ class HomeFragment : Fragment() {
 
         // Style the tips and instructions links as underlined black text
         binding.textviewTips.paintFlags = binding.textviewTips.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
-        binding.textviewInstructions.paintFlags = binding.textviewInstructions.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
+        binding.textviewInstructions.paintFlags =
+            binding.textviewInstructions.paintFlags.or(android.graphics.Paint.UNDERLINE_TEXT_FLAG)
 
         binding.linearSearch.isClickable = true
         binding.linearSearch.setOnClickListener {
@@ -257,7 +259,6 @@ class HomeFragment : Fragment() {
     }
 
 
-
     /**
      * Requests any needed runtime permissions before starting a download.
      *
@@ -268,13 +269,21 @@ class HomeFragment : Fragment() {
     private fun checkStoragePermissionAndStart(metadata: VideoInfoResponse, url: String, formatType: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permission = android.Manifest.permission.POST_NOTIFICATIONS
-            if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    permission
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
                 notificationPermissionLauncher.launch(permission)
             }
         }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
             val permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            if (androidx.core.content.ContextCompat.checkSelfPermission(requireContext(), permission) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+            if (androidx.core.content.ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    permission
+                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) {
                 // Store pending download info so we can auto-resume on grant
                 pendingDownloadMetadata = metadata
                 pendingDownloadUrl = url
@@ -393,7 +402,8 @@ class HomeFragment : Fragment() {
             if (validUrl != null && lastResponse != null) {
                 checkStoragePermissionAndStart(lastResponse, validUrl, formatType)
             } else {
-                val errorMsg = lastErrorMessage ?: "Unable to obtain a valid $formatType download link after 2 attempts."
+                val errorMsg =
+                    lastErrorMessage ?: "Unable to obtain a valid $formatType download link after 2 attempts."
                 Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_LONG).show()
             }
         }
@@ -507,16 +517,18 @@ class HomeFragment : Fragment() {
                             binding.linearResult.visibility = View.GONE
                             binding.linearError.visibility = View.GONE
                         }
+
                         is HomeUiState.Loading -> {
                             binding.progressBar.visibility = View.VISIBLE
                             binding.textviewSearch.visibility = View.GONE
                             binding.linearError.visibility = View.GONE
                         }
+
                         is HomeUiState.Success -> {
                             binding.progressBar.visibility = View.GONE
                             binding.textviewSearch.visibility = View.VISIBLE
                             binding.linearError.visibility = View.GONE
-                            
+
                             // Fade out search, fade in result
                             binding.linearForSearch.fadeOut {
                                 val metadata = state.metadata
@@ -527,17 +539,19 @@ class HomeFragment : Fragment() {
                                 binding.textviewTitle.text = metadata.title ?: "No Title"
                                 binding.textviewChannel.text = metadata.channelTitle ?: "Unknown Channel"
                                 binding.textviewViews.text = metadata.viewCount ?: "0"
-                                binding.textviewDuration.text = formatDuration(metadata.durationSeconds, metadata.durationText)
-                                
+                                binding.textviewDuration.text =
+                                    formatDuration(metadata.durationSeconds, metadata.durationText)
+
                                 val thumbnailUrl = metadata.thumbnails?.lastOrNull()?.url
                                 Glide.with(this@HomeFragment)
                                     .load(thumbnailUrl)
                                     .placeholder(R.drawable.youtube_thumbnail)
                                     .into(binding.thumbnail)
-                                
+
                                 binding.linearResult.fadeIn()
                             }
                         }
+
                         is HomeUiState.Error -> {
                             binding.progressBar.visibility = View.GONE
                             binding.textviewSearch.visibility = View.VISIBLE
@@ -647,13 +661,19 @@ class HomeFragment : Fragment() {
 
         // Limit maximum height to half the screen height
         val maxScreenHeight = resources.displayMetrics.heightPixels / 2
-        val bottomSheetInternal = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+        val bottomSheetInternal =
+            bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
         bottomSheetInternal?.setBackgroundResource(android.R.color.transparent)
 
+        bottomSheetDialog.setCancelable(false)
+        bottomSheetDialog.setCanceledOnTouchOutside(true)
+
         bottomSheetDialog.setOnShowListener {
-            val bottomSheet = bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet =
+                bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
             if (bottomSheet != null) {
                 val behavior = com.google.android.material.bottomsheet.BottomSheetBehavior.from(bottomSheet)
+                behavior.isHideable = false
                 behavior.maxHeight = maxScreenHeight
                 behavior.peekHeight = maxScreenHeight
                 behavior.state = com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
@@ -667,9 +687,14 @@ class HomeFragment : Fragment() {
             listview.visibility = View.VISIBLE
             textviewEmpty.visibility = View.GONE
 
-            val adapter = object : ArrayAdapter<com.youtubie.app.data.model.SearchHistoryItem>(requireContext(), R.layout.item_search_history, searchHistory) {
+            val adapter = object : ArrayAdapter<com.youtubie.app.data.model.SearchHistoryItem>(
+                requireContext(),
+                R.layout.item_search_history,
+                searchHistory
+            ) {
                 override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                    val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_search_history, parent, false)
+                    val view =
+                        convertView ?: LayoutInflater.from(context).inflate(R.layout.item_search_history, parent, false)
                     val item = getItem(position)
                     val tvQuery = view.findViewById<TextView>(R.id.textviewQuery)
                     val tvTitle = view.findViewById<TextView>(R.id.textviewTitle)

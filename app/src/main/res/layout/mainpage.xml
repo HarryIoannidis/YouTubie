@@ -61,27 +61,31 @@
 						android:layout_marginBottom="3dp"
 						android:background="@android:color/transparent"
 						android:layout_gravity="center_horizontal|center_vertical"
+						app:menu="@menu/bottom_nav_menu"
+						app:itemIconTint="@color/nav_item_tint"
+						app:itemTextColor="@color/nav_item_tint"
+						app:itemIconSize="24dp"
+						app:elevation="0dp"
 						app:itemBackground="@drawable/selector_ripple_item" />
 				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>
 	<com.google.android.material.floatingactionbutton.FloatingActionButton
-		
+		android:id="@+id/fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
 		android:layout_margin="16dp"
+		android:layout_marginBottom="5dp"
+		android:layout_gravity="center_horizontal|bottom"
 		android:backgroundTint="#FFFFFF"
 		android:tint="#000000"
 		app:backgroundTint="#E0E0E0"
 		app:elevation="0dp"
 		app:borderWidth="1dp"
-		app:rippleColor="#40000000" 
-		android:id="@+id/fab"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="5dp"
-		android:layout_gravity="center_horizontal|bottom"
+		app:rippleColor="#40000000"
 		app:srcCompat="@drawable/menu_burger"
 		android:translationY="-18.0dp"
 		android:scaleX="1.1"
 		android:scaleY="1.1" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
